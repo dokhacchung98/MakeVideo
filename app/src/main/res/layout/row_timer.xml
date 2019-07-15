@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.khacchung.makevideo.model.MyTimerModel" />
+
+        <variable
+            name="handler"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ln_select"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="4dp"
+        android:gravity="center|left">
+
+        <CheckBox
+            android:id="@+id/cb_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:checked="@{model.selected}"
+            android:onClick="@{(v)->handler.onClickWithData(v, model)}" />
+
+        <TextView
+            android:id="@+id/txtTimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:gravity="left|center"
+            android:paddingLeft="48dp"
+            android:text="@{model.time+` giây`}"
+            android:textColor="@color/colorBlack" />
+    </FrameLayout>
+</layout>

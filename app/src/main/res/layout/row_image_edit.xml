@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="myImageModel"
+            type="com.khacchung.makevideo.model.MyImageModel" />
+
+        <variable
+            name="myClick"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
+
+        <variable
+            name="isHiden"
+            type="Boolean" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+
+        <ImageView
+            android:id="@+id/imgThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:onClick="@{(v)->myClick.onClickWithData(v, myImageModel)}"
+            android:transitionName="imgFrom"
+            app:imageUri="@{myImageModel.pathImage}" />
+
+        <TextView
+            android:id="@+id/txtNumberOfSeleted"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:layout_gravity="top|right"
+            android:background="@drawable/check"
+            android:gravity="right|top"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:text="@{myImageModel.numberOfSeleted+``}"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:visibility="@{myImageModel.selected ? View.VISIBLE : View.GONE}" />
+
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/ic_paint_brush"
+            android:onClick="@{(v)->myClick.onClickWithData(v, myImageModel)}"
+            android:visibility="@{isHiden ? View.GONE : View.VISIBLE}" />
+    </androidx.cardview.widget.CardView>
+</layout>

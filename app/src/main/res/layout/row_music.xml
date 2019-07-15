@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.khacchung.makevideo.model.MyMusicModel" />
+
+        <variable
+            name="handler"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ln_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center|left"
+        android:onClick="@{(v)->handler.onClickWithData(v, model)}">
+
+        <ImageView
+            android:id="@+id/img_draw_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@{model.selected ? @drawable/ic_play_button : @drawable/ic_music}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="8dp"
+            android:lines="1"
+            android:text="@{model.nameMusic}"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

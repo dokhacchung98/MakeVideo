@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">MakeVideo</string>
+    <string name="edit_image">Chỉnh Sửa Hình Ảnh</string>
+    <string name="create_video">Khởi Tạo Video</string>
+    <string name="denied_permision">Bạn cần cấp quyền trước khi thao tác</string>
+    <string name="back">Quay lại</string>
+    <string name="error_intent">Có lỗi bất ngờ xảy ra, vui lòng thử lại</string>
+    <string name="play">Play</string>
+    <string name="brush">Vẽ</string>
+    <string name="label_text">Text</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Tẩy</string>
+    <string name="label_filter">Lọc</string>
+    <string name="opacity">Độ mờ</string>
+    <string name="size_brush">Độ lớn</string>
+    <string name="close">Đóng</string>
+    <string name="done">Xong</string>
+    <string name="permission">Bạn cần cấp quyền cho ứng dụng để có thể sử dụng một cách tốt nhất...</string>
+    <string name="try_again">Thử lại</string>
+    <string name="step_next">Tiếp theo</string>
+    <string name="pull_up_to_continue">Danh sách ảnh</string>
+    <string name="change_list_image">Thay đổi danh sách ảnh</string>
+    <string name="change_list_effect">Thay đổi danh sách hiệu ứng</string>
+    <string name="change_list_timer">Thay đổi thời gian</string>
+    <string name="change_list_music">Thay đổi âm thanh</string>
+    <string name="second_1">1 giây</string>
+    <string name="second_2">2 giây</string>
+    <string name="second_3">3 giây</string>
+    <string name="second_4">4 giây</string>
+    <string name="second_5">5 giây</string>
+</resources>

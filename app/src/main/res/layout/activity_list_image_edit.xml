@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="layout_manager_folder"
+            type="androidx.recyclerview.widget.GridLayoutManager" />
+
+        <variable
+            name="layout_manager_image"
+            type="androidx.recyclerview.widget.GridLayoutManager" />
+
+        <variable
+            name="folder_adapter"
+            type="com.khacchung.makevideo.adapter.FolderAdapter" />
+
+        <variable
+            name="list_image_adapter"
+            type="com.khacchung.makevideo.adapter.ListImageAdapter" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFolder"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="4dp"
+            app:adapter="@{folder_adapter}"
+            app:layoutGridManager="@{layout_manager_folder}" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvImage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            app:adapter="@{list_image_adapter}"
+            app:layoutGridManager="@{layout_manager_image}" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="myModel"
+            type="com.khacchung.makevideo.model.MyFolderModel" />
+
+        <variable
+            name="handler"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:background="@{myModel.selected ? @drawable/boder_selected : null}"
+        android:gravity="center"
+        android:onClick="@{(v)->handler.onClickWithData(v, myModel)}"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_folder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{myModel.nameFolder}"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp" />
+    </LinearLayout>
+</layout>
