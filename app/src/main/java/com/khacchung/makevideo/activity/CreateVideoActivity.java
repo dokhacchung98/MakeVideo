@@ -1,9 +1,7 @@
 package com.khacchung.makevideo.activity;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +19,7 @@ import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityCreateVideoBinding;
+import com.khacchung.makevideo.extention.GetFileFromURI;
 import com.khacchung.makevideo.fragment.ListEffectsFramgent;
 import com.khacchung.makevideo.fragment.ListImageFramesFramgent;
 import com.khacchung.makevideo.fragment.ListImageFramgent;
@@ -32,7 +31,6 @@ import com.khacchung.makevideo.model.MyMusicModel;
 import com.khacchung.makevideo.model.MyTimerModel;
 import com.khacchung.makevideo.service.CreateVideoService;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class CreateVideoActivity extends BaseActivity {
@@ -141,28 +139,8 @@ public class CreateVideoActivity extends BaseActivity {
         tmp.setPathMusic("android.resource://com.khacchung.makevideo/" + R.raw.a);
         listMusic.add(tmp);
 
-        ContentResolver cr = getContentResolver();
-
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
-        Cursor cur = cr.query(uri, null, selection, null, sortOrder);
-        int count = 0;
-
-        if (cur != null) {
-            count = cur.getCount();
-
-            if (count > 0) {
-                while (cur.moveToNext()) {
-                    String pathMusic = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
-                    File file = new File(pathMusic);
-                    if (file.exists()) {
-                        listMusic.add(new MyMusicModel(pathMusic, file.getName()));
-                    }
-                }
-            }
-        }
-        cur.close();
+        listMusic.addAll(GetFileFromURI.getAllMusicFromURI(this, uri.toString()));
     }
 
     @Override
@@ -174,7 +152,7 @@ public class CreateVideoActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-
+            //todo: save video
         }
         return super.onOptionsItemSelected(item);
     }

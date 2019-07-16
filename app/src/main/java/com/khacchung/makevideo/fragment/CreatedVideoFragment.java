@@ -9,12 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.khacchung.makevideo.R;
+import com.khacchung.makevideo.adapter.ListVideosCreatedAdapter;
+import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.FragmentCreatedVideoBinding;
+import com.khacchung.makevideo.handler.MySelectedItemListener;
 
-public class CreatedVideoFragment extends Fragment {
+import java.util.ArrayList;
+
+public class CreatedVideoFragment extends Fragment implements MySelectedItemListener {
     private FragmentCreatedVideoBinding binding;
+    private ArrayList<String> listVideos;
+    private ListVideosCreatedAdapter listVideosCreatedAdapter;
+    private BaseActivity baseActivity;
+
+    public CreatedVideoFragment(BaseActivity baseActivity, ArrayList<String> listVideos) {
+        this.listVideos = listVideos;
+        this.baseActivity = baseActivity;
+    }
 
     @Nullable
     @Override
@@ -26,5 +40,23 @@ public class CreatedVideoFragment extends Fragment {
                 false
         );
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        listVideosCreatedAdapter = new ListVideosCreatedAdapter(baseActivity, listVideos, this);
+        binding.setAdapter(listVideosCreatedAdapter);
+        binding.setLayoutManager(new GridLayoutManager(baseActivity, 2));
+    }
+
+    @Override
+    public void selectedItem(Object obj, int code) {
+
+    }
+
+    @Override
+    public void selectedItem(Object obj, int code, int p) {
+
     }
 }
