@@ -16,6 +16,7 @@ import com.khacchung.makevideo.adapter.ListVideosCreatedAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.FragmentCreatedVideoBinding;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
+import com.khacchung.makevideo.util.CodeSelectedItem;
 
 import java.util.ArrayList;
 
@@ -57,6 +58,8 @@ public class CreatedVideoFragment extends Fragment implements MySelectedItemList
 
     @Override
     public void selectedItem(Object obj, int code, int p) {
-
+        if (code == CodeSelectedItem.CODE_SHOW_VIDEO && p < listVideos.size()) {
+            //todo: show video
+        }
     }
 }

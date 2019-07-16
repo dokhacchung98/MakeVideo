@@ -1,7 +1,6 @@
 package com.khacchung.makevideo.activity;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.MyPagerCreatedAdapter;
+import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.ActivityCreatedFileBinding;
 import com.khacchung.makevideo.extention.GetFileFromURI;
 import com.khacchung.makevideo.extention.MyPath;
@@ -20,7 +20,7 @@ import com.khacchung.makevideo.fragment.CreatedVideoFragment;
 
 import java.util.ArrayList;
 
-public class CreatedFileActivity extends AppCompatActivity {
+public class CreatedFileActivity extends BaseActivity {
     private ActivityCreatedFileBinding binding;
 
     private CreatedImageFragment createdImageFragment;
@@ -37,7 +37,7 @@ public class CreatedFileActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_created_file);
         initData();
@@ -46,14 +46,17 @@ public class CreatedFileActivity extends AppCompatActivity {
 
     private void initUI() {
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setElevation(0);
+        setTitleToolbar("Danh Sách Đã Tạo");
+        enableBackButton();
 
         binding.tlCreated.setupWithViewPager(binding.vpCreated);
         binding.tlCreated.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(binding.vpCreated));
         binding.vpCreated.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tlCreated));
 
-        createdImageFragment = new CreatedImageFragment();
-        createdVideoFragment = new CreatedVideoFragment();
+        createdImageFragment = new CreatedImageFragment(this, listImages);
+        createdVideoFragment = new CreatedVideoFragment(this, listVideos);
 
         FragmentManager manager = getSupportFragmentManager();
         myPagerCreatedAdapter = new MyPagerCreatedAdapter(manager, this, createdImageFragment, createdVideoFragment);

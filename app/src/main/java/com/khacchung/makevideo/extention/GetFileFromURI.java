@@ -50,12 +50,13 @@ public class GetFileFromURI {
 
         final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
         cursor = context.getApplicationContext().getContentResolver().query(Uri.parse(uri), projection, null, null, orderBy + " DESC");
+        if (cursor != null) {
+            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
 
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            listvideo.add(absolutePathOfImage);
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                listvideo.add(absolutePathOfImage);
+            }
         }
         return listvideo;
     }
