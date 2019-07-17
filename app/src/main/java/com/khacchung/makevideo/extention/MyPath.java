@@ -20,4 +20,8 @@ public class MyPath {
     public static String getPathTempVideo(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/video_temp/";
     }
+
+    public static String getPathFrame(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/frames/";
+    }
 }

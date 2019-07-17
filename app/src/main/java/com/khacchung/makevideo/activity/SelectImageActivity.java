@@ -79,18 +79,13 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
 
         binding.setHandler(this);
 
-        getAllFolderContaningImage();
 
         if (myApplication.getListIamge().size() > 2) {
             listImageSelected = myApplication.getListIamge();
-            showItemSeleted();
-            bindingSizeSeleted();
-            for (MyImageModel model : listImageByFolder) {
-                bindingNumberSeletedOneImage(model);
-            }
-            listImageAdapter.notifyDataSetChanged();
             imageSeletedAdapter.notifyDataSetChanged();
+            bindingSizeSeleted();
         }
+        getAllFolderContaningImage();
     }
 
     private void getAllFolderContaningImage() {
