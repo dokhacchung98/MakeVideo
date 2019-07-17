@@ -67,7 +67,8 @@ public class TimerFramgent extends Fragment implements MySelectedItemListener {
                 listTimer.get(index).setSelected(true);
             }
             listTimerAdapter.notifyDataSetChanged();
-            //todo: broadcast event changed music
+
+            baseActivity.onChangedTimeFrame();
         }
     }
 

@@ -2,6 +2,7 @@ package com.khacchung.makevideo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,11 +34,14 @@ import com.khacchung.makevideo.fragment.TimerFramgent;
 import com.khacchung.makevideo.handler.CreatedListener;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.mask.THEMES;
+import com.khacchung.makevideo.model.MyFrameModel;
 import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.model.MyMusicModel;
 import com.khacchung.makevideo.model.MyTimerModel;
 import com.khacchung.makevideo.service.CreateVideoService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CreateVideoActivity extends BaseActivity implements CreatedListener, MyClickHandler, SeekBar.OnSeekBarChangeListener {
@@ -48,6 +52,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private ArrayList<MyMusicModel> listMusic;
     private ArrayList<THEMES> listEffect;
     private ArrayList<MyTimerModel> listTimer;
+    private ArrayList<MyFrameModel> listFrame;
 
     private ListImageFramgent listImageFramgent;
     private ListEffectsFramgent listEffectsFramgent;
@@ -55,6 +60,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private ListImageFramesFramgent listImageFramesFramgent;
     private TimerFramgent timerFramgent;
     private Handler handler = new Handler();
+
+    private MediaPlayer mediaPlayer;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoActivity.class);
@@ -76,12 +83,11 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             finish();
         }
 
-        renderVideo();
-
         getListMusic();
 
         initEffects();
         initTimer();
+        initFrame();
 
         initFragment();
 
@@ -94,6 +100,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.seekbarTime.setOnSeekBarChangeListener(this);
 
         setupIconTablayout();
+
+        renderVideo();
     }
 
     private void setupIconTablayout() {
@@ -114,6 +122,23 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         listTimer.add(new MyTimerModel(5, false));
     }
 
+    private void initFrame() {
+        if (listFrame == null) {
+            listFrame = new ArrayList<>();
+        }
+        listFrame.clear();
+
+        listFrame.add(new MyFrameModel(""));
+
+        File file[] = new File(MyPath.getPathFrame(this)).listFiles();
+        for (File f : file) {
+            MyFrameModel tmp = new MyFrameModel();
+            tmp.setPathFrame(f.getAbsolutePath());
+            tmp.setSelected(false);
+            listFrame.add(tmp);
+        }
+    }
+
     private void initEffects() {
         if (listEffect == null) {
             listEffect = new ArrayList<>();
@@ -128,7 +153,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         listImageFramgent = new ListImageFramgent(this, listImage);
         listEffectsFramgent = new ListEffectsFramgent(this, listEffect, myApplication);
         listMusicFramgent = new ListMusicFramgent(this, listMusic, myApplication);
-        listImageFramesFramgent = new ListImageFramesFramgent();
+        listImageFramesFramgent = new ListImageFramesFramgent(this, listFrame, myApplication);
         timerFramgent = new TimerFramgent(this, myApplication, listTimer);
     }
 
@@ -145,14 +170,12 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         }
         listMusic.clear();
 
-        MyMusicModel tmp = new MyMusicModel();
-        tmp.setSelected(true);
-        tmp.setNameMusic("Demo");
-        tmp.setPathMusic("android.resource://com.khacchung.makevideo/" + R.raw.a);
-        listMusic.add(tmp);
-
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         listMusic.addAll(GetFileFromURI.getAllMusicFromURI(this, uri.toString()));
+        if (listMusic.size() > 0) {
+            listMusic.get(0).setSelected(true);
+            myApplication.setMyMusicModel(listMusic.get(0));
+        }
     }
 
     @Override
@@ -193,6 +216,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
         changeCurrentTimeByCurrentFrame();
 
+        initMusic();
         playVideo();
     }
 
@@ -211,6 +235,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             currentFrame = 0;
             handler.removeCallbacks(runnable);
             pauseVideo();
+            restartMusic();
         }
 
         changeCurrentTimeByCurrentFrame();
@@ -221,7 +246,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            handler.postDelayed(this, (int) (34 * myApplication.getTimeLoad()));
+            handler.postDelayed(this, (int) (40 * myApplication.getTimeLoad()));
             setImage();
         }
     };
@@ -232,7 +257,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         sizeMaxFrame = numberOfFrames;
         hideLoading();
 
-        initVideo();
+        runOnUiThread(() -> initVideo());
     }
 
     @Override
@@ -244,6 +269,9 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onChangedTimeFrame() {
         Log.e(TAG, "onChangedTimeFrame(): " + myApplication.getTimeLoad());
+        changeTotalTime();
+        stopVideo();
+        playVideo();
     }
 
     @Override
@@ -255,26 +283,43 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onChangedMusic() {
         Log.e(TAG, "onChangedMusic(): " + myApplication.getMyMusicModel().getNameMusic());
-
+        stopVideo();
+        initMusic();
+        playVideo();
     }
 
     @Override
     public void onChangedVideoFrame() {
         Log.e(TAG, "onChangedVideoFrame()");
-        renderVideo();
+        String pathFrame = myApplication.getFrameVideo();
+        if (!pathFrame.isEmpty()) {
+            binding.imgFrame.setImageURI(Uri.parse(pathFrame));
+            stopVideo();
+            playVideo();
+        }
     }
 
     private void pauseVideo() {
         binding.frPlay.setVisibility(View.VISIBLE);
         isPlaying = false;
         handler.removeCallbacks(runnable);
+        pauseMusic();
     }
 
     private void playVideo() {
         hideLoading();
         binding.frPlay.setVisibility(View.GONE);
         isPlaying = true;
+        playMusic();
         handler.post(runnable);
+    }
+
+    private void stopVideo() {
+        binding.frPlay.setVisibility(View.VISIBLE);
+        currentFrame = 0;
+        handler.removeCallbacks(runnable);
+        isPlaying = false;
+        restartMusic();
     }
 
     @Override
@@ -297,6 +342,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (progress >= 0 && progress <= sizeMaxFrame && fromUser) {
             currentFrame = progress;
+            int tmp = (int) (((float) currentFrame / sizeMaxFrame) * totalTime * 1000);
+            seekMusic(tmp);
             setImage();
         }
     }
@@ -328,5 +375,40 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private void showMess() {
         showLoading("Đang áp dụng video...");
+    }
+
+    private void initMusic() {
+        if (myApplication.getMyMusicModel() != null) {
+            String pathMusic = myApplication.getMyMusicModel().getPathMusic();
+            if (mediaPlayer != null) {
+                mediaPlayer.release();
+            }
+            mediaPlayer = MediaPlayer.create(this, Uri.parse(pathMusic));
+            mediaPlayer.setLooping(false);
+        }
+    }
+
+    private void playMusic() {
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+    }
+
+    private void pauseMusic() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    private void restartMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.seekTo(0);
+        }
+    }
+
+    private void seekMusic(int seconds) {
+        if (mediaPlayer != null) {
+            mediaPlayer.seekTo(seconds);
+        }
     }
 }

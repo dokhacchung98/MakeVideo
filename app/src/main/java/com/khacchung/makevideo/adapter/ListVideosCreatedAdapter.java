@@ -14,17 +14,18 @@ import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.RowVideoCreatedBinding;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
+import com.khacchung.makevideo.model.MyVideoModel;
 import com.khacchung.makevideo.util.CodeSelectedItem;
 
 import java.util.ArrayList;
 
 public class ListVideosCreatedAdapter extends RecyclerView.Adapter<ListVideosCreatedAdapter.MyViewHolder> {
-    private ArrayList<String> listImages;
+    private ArrayList<MyVideoModel> listImages;
     private RowVideoCreatedBinding binding;
     private BaseActivity baseActivity;
     private MySelectedItemListener listener;
 
-    public ListVideosCreatedAdapter(BaseActivity baseActivity, ArrayList<String> listImages, MySelectedItemListener listener) {
+    public ListVideosCreatedAdapter(BaseActivity baseActivity, ArrayList<MyVideoModel> listImages, MySelectedItemListener listener) {
         this.listImages = listImages;
         this.baseActivity = baseActivity;
         this.listener = listener;
@@ -44,7 +45,7 @@ public class ListVideosCreatedAdapter extends RecyclerView.Adapter<ListVideosCre
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String model = listImages.get(position);
+        MyVideoModel model = listImages.get(position);
         holder.bind(model);
         holder.binding.setHandler(new MyClickHandler() {
             @Override

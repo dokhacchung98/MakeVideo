@@ -21,7 +21,7 @@ public class MyApplication extends Application {
 
     private String pathSaveTempImage;
 
-    private float timeLoad = 3f;
+    private float timeLoad = 1f;
     private String frameVideo = "";
     private THEMES seletedTheme = THEMES.Shine;
     private MyMusicModel myMusicModel = null;
@@ -39,6 +39,7 @@ public class MyApplication extends Application {
         frameVideo = "";
         seletedTheme = THEMES.Shine;
         myMusicModel = null;
+        listIamge.clear();
     }
 
     @Override

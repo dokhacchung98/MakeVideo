@@ -34,10 +34,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.all_animation_2;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     Love("Love") {
         public ArrayList<EFFECT> getTheme() {
@@ -56,10 +52,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.love;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     CIRCLE_IN("Circle In") {
         public ArrayList<EFFECT> getTheme() {
@@ -74,10 +66,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.circle_in;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     CIRCLE_LEFT_BOTTOM("Circle Left Bottom") {
@@ -94,10 +82,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.circle_left_up;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     CIRCLE_OUT("Circle Out") {
         public ArrayList<EFFECT> getTheme() {
@@ -112,10 +96,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.circle_out;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     CIRCLE_RIGHT_BOTTOM("Circle Right Bottom") {
@@ -132,10 +112,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.circle_right_bottom;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     DIAMOND_IN("Diamond In") {
         public ArrayList<EFFECT> getTheme() {
@@ -150,10 +126,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.daimond_in;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     DIAMOND_OUT("Diamond out") {
@@ -170,10 +142,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.daimond_out;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     ECLIPSE_IN("Eclipse In") {
         public ArrayList<EFFECT> getTheme() {
@@ -188,10 +156,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.eclipse_in;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     FOUR_TRIANGLE("Four Triangle") {
@@ -208,10 +172,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.four_train;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     OPEN_DOOR("Open Door") {
         public ArrayList<EFFECT> getTheme() {
@@ -226,10 +186,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.open_door;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     PIN_WHEEL("Pin Wheel") {
@@ -246,10 +202,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.pin_wheel;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     RECT_RANDOM("Rect Random") {
         public ArrayList<EFFECT> getTheme() {
@@ -264,10 +216,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.rect_rand;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     SKEW_LEFT_MEARGE("Skew Left Mearge") {
@@ -284,10 +232,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.skew_left_close;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     SKEW_RIGHT_MEARGE("Skew Right Mearge") {
         public ArrayList<EFFECT> getTheme() {
@@ -302,10 +246,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.skew_right_open;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     SQUARE_OUT("Square Out") {
@@ -322,10 +262,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.square_out;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     },
     SQUARE_IN("Square In") {
         public ArrayList<EFFECT> getTheme() {
@@ -340,10 +276,6 @@ public enum THEMES {
 
         public int getThemeDrawable() {
             return R.drawable.square_in;
-        }
-
-        public int getThemeMusic() {
-            return R.raw.a;
         }
     },
     VERTICAL_RECT("Vertical Rect") {
@@ -360,10 +292,6 @@ public enum THEMES {
         public int getThemeDrawable() {
             return R.drawable.vertical_ran;
         }
-
-        public int getThemeMusic() {
-            return R.raw.a;
-        }
     };
 
     String name;
@@ -373,8 +301,6 @@ public enum THEMES {
     public abstract ArrayList<EFFECT> getTheme(ArrayList<EFFECT> arrayList);
 
     public abstract int getThemeDrawable();
-
-    public abstract int getThemeMusic();
 
     private THEMES(String string) {
         this.name = "";

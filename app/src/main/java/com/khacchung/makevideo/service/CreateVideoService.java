@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.os.Handler;
 import android.os.IBinder;
 
 import com.khacchung.makevideo.application.MyApplication;
@@ -26,6 +27,8 @@ public class CreateVideoService extends Service {
     private MyApplication myApplication;
     private ArrayList<MyImageModel> listImage;
 
+    private Handler handler;
+
     public static void startService(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoService.class);
         activity.startService(intent);
@@ -42,7 +45,9 @@ public class CreateVideoService extends Service {
     public CreateVideoService() {
         myApplication = MyApplication.getInstance();
         listImage = myApplication.getListIamge();
-        createImages();
+
+        handler = new Handler();
+        handler.post(() -> createImages());
     }
 
     @Override
@@ -124,5 +129,6 @@ public class CreateVideoService extends Service {
         if (myApplication.getListener() != null) {
             myApplication.getListener().onSuccess(indexTempRun);
         }
+        this.stopSelf();
     }
 }
