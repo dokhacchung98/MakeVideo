@@ -74,7 +74,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
 
     private void copyAssets() {
         AssetManager assetManager = getAssets();
-        String[] files = null;
+        String[] files;
         try {
             files = assetManager.list("frames");
         } catch (IOException e) {
@@ -84,9 +84,10 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
             return;
         }
 
+        assert files != null;
         for (String filename : files) {
-            InputStream in = null;
-            OutputStream out = null;
+            InputStream in;
+            OutputStream out;
             try {
                 String pathSave = MyPath.getPathFrame(this);
                 in = assetManager.open("frames/" + filename);
@@ -94,10 +95,8 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                 out = new FileOutputStream(outFile);
                 copyFile(in, out);
                 in.close();
-                in = null;
                 out.flush();
                 out.close();
-                out = null;
             } catch (IOException e) {
                 Log.e(TAG, "Failed to copy asset file: " + filename, e);
                 hideLoading();

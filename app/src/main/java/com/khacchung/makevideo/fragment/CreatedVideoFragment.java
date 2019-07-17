@@ -16,17 +16,18 @@ import com.khacchung.makevideo.adapter.ListVideosCreatedAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.FragmentCreatedVideoBinding;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
+import com.khacchung.makevideo.model.MyVideoModel;
 import com.khacchung.makevideo.util.CodeSelectedItem;
 
 import java.util.ArrayList;
 
 public class CreatedVideoFragment extends Fragment implements MySelectedItemListener {
     private FragmentCreatedVideoBinding binding;
-    private ArrayList<String> listVideos;
+    private ArrayList<MyVideoModel> listVideos;
     private ListVideosCreatedAdapter listVideosCreatedAdapter;
     private BaseActivity baseActivity;
 
-    public CreatedVideoFragment(BaseActivity baseActivity, ArrayList<String> listVideos) {
+    public CreatedVideoFragment(BaseActivity baseActivity, ArrayList<MyVideoModel> listVideos) {
         this.listVideos = listVideos;
         this.baseActivity = baseActivity;
     }

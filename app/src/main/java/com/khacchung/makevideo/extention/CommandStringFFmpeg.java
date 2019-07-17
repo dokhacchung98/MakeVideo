@@ -75,6 +75,20 @@ public class CommandStringFFmpeg {
         };
     }
 
+    public static String[] copyThumbnail(Context context, String sourceImage, String nameImage) {
+        String parentPath = MyPath.getPathThumbnail(context);
+        File file = new File(parentPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return new String[]{
+                "-y",
+                "-i",
+                sourceImage,
+                parentPath + nameImage + ".png"
+        };
+    }
+
     //ffmpeg -framerate 30 -i list_image_temp\img%04d.jpg -r 25 -pix_fmt yuv420p ouuu.mp4 --none sound
     //ffmpeg -framerate 15/5 -i list_image_temp\img%04d.jpg -i a.wav -r 25 -t total_time -c:v libx264 -preset ultrafast -pix_fmt yuv420p ouuu.mp4 --with sound
 }

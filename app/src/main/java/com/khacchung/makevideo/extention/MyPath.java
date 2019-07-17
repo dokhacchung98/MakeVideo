@@ -24,4 +24,8 @@ public class MyPath {
     public static String getPathFrame(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/frames/";
     }
+
+    public static String getPathThumbnail(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/list_thumbnail/";
+    }
 }

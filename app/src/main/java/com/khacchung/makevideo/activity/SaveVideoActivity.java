@@ -32,12 +32,16 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     private String uriVideoFrames = "";
     private float timeLoad;
     private Handler handler = new Handler();
+    private Handler handlerThumbnail = new Handler();
 
     private boolean isFinish = false;
     private boolean isRunEnd = false;
     private boolean isSuccess = false;
     private boolean isShow = false;
     private boolean isDestinationFolder = false;
+    private boolean isCreateThumbnailSuccess = false;
+
+    private String nameVideo;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, SaveVideoActivity.class);
@@ -55,7 +59,16 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         uriVideoFrames = myApplication.getFrameVideo();
         timeLoad = myApplication.getTimeLoad();
 
+        nameVideo = "video"
+                + System.currentTimeMillis();
+
+        File file = new File(MyPath.getPathSaveVideo(this));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
         if (FFmpeg.getInstance(this).isSupported()) {
+            createThumbnail();
             saveVideo();
             handler.post(runnable);
         } else {
@@ -76,6 +89,40 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
 
     }
 
+    private void createThumbnail() {
+        handlerThumbnail.post(runnable);
+    }
+
+    private Runnable runnableThumbnail = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                File file[] = new File(MyPath.getPathTemp(SaveVideoActivity.this)).listFiles();
+                if (file.length > 0) {
+                    String cmd[] = CommandStringFFmpeg.copyThumbnail(SaveVideoActivity.this,
+                            file[0].getAbsolutePath(), nameVideo);
+
+                    FFmpeg.getInstance(SaveVideoActivity.this).execute(cmd, new ExecuteBinaryResponseHandler() {
+                        @Override
+                        public void onSuccess(String message) {
+                            super.onSuccess(message);
+                            isCreateThumbnailSuccess = true;
+                        }
+
+                        @Override
+                        public void onFailure(String message) {
+                            super.onFailure(message);
+                            isCreateThumbnailSuccess = true;
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                isCreateThumbnailSuccess = true;
+                handlerThumbnail.removeCallbacks(runnableThumbnail);
+            }
+        }
+    };
+
     private void saveVideo() {
         String pathSave;
         File file = new File(MyPath.getPathTempVideo(this));
@@ -87,8 +134,7 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
             isDestinationFolder = false;
         } else {
             pathSave = MyPath.getPathSaveVideo(this)
-                    + "video"
-                    + System.currentTimeMillis() + ".mp4";
+                    + nameVideo + ".mp4";
             isDestinationFolder = true;
         }
         String cmd[] = CommandStringFFmpeg.getCommandCreadVideoFromImageAndMusic(this, myApplication.getMyMusicModel(), timeLoad, pathSave);
@@ -196,7 +242,7 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
                 isRunEnd = true;
             }
             binding.seekbarPoint.setPoints(process);
-            handler.postDelayed(this, 100);
+            handler.postDelayed(this, 25);
             if (process == 100) {
                 ShowLog(isSuccess);
                 handler.removeCallbacks(this);

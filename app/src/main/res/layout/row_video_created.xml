@@ -5,7 +5,7 @@
 
         <variable
             name="model"
-            type="String" />
+            type="com.khacchung.makevideo.model.MyVideoModel" />
 
         <variable
             name="handler"
@@ -23,7 +23,7 @@
             android:id="@+id/imgThumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:imageUri="@{model}" />
+            app:imageUri="@{model.pathThumbnail}" />
 
         <ImageView
             android:id="@+id/img_play"
