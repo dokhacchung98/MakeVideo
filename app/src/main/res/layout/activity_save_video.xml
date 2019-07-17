@@ -1,9 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.SaveVideoActivity">
+<layout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="handler"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:swagpoints="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.dualcores.swagpoints.SwagPoints
+            android:id="@+id/seekbar_point"
+            android:layout_width="match_parent"
+            android:layout_height="340dp"
+            android:layout_gravity="center"
+            android:padding="64dp"
+            swagpoints:arcColor="@color/colorDark2"
+            swagpoints:arcWidth="8dp"
+            swagpoints:enabled="false"
+            swagpoints:indicatorIcon="@drawable/indicator"
+            swagpoints:max="100"
+            swagpoints:min="0"
+            swagpoints:progressColor="@color/colorPrimary"
+            swagpoints:progressWidth="12dp"
+            swagpoints:step="1"
+            swagpoints:textColor="@color/colorBlack"
+            swagpoints:textSize="72sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:paddingHorizontal="24dp"
+            android:text="@string/please_wait"
+            android:textColor="#464646"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/background_button"
+            android:onClick="@{(v)->handler.onClick(v)}"
+            android:text="@string/cancel"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+</layout>

@@ -1,13 +1,17 @@
 package com.khacchung.makevideo.application;
 
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 
-import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.extention.MyPath;
+import com.khacchung.makevideo.handler.CreatedListener;
 import com.khacchung.makevideo.mask.THEMES;
 import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.model.MyMusicModel;
+import com.khacchung.makevideo.service.CreateVideoService;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MyApplication extends Application {
@@ -17,15 +21,24 @@ public class MyApplication extends Application {
 
     private String pathSaveTempImage;
 
-    private float timeLoad = 2f;
+    private float timeLoad = 3f;
     private String frameVideo = "";
-    private THEMES seletedTheme = THEMES.CIRCLE_IN;
-    private MyMusicModel myMusicModel = new MyMusicModel("android.resource://com.khacchung.makevideo/" + R.raw.a, "temp");
+    private THEMES seletedTheme = THEMES.Shine;
+    private MyMusicModel myMusicModel = null;
 
     private ArrayList<MyImageModel> listIamge = new ArrayList<>();
 
+    private CreatedListener listener;
+
     public static MyApplication getInstance() {
         return instance;
+    }
+
+    public void initData() {
+        timeLoad = 1f;
+        frameVideo = "";
+        seletedTheme = THEMES.Shine;
+        myMusicModel = null;
     }
 
     @Override
@@ -89,5 +102,33 @@ public class MyApplication extends Application {
 
     public void setPathSaveTempImage(String pathSaveTempImage) {
         this.pathSaveTempImage = pathSaveTempImage;
+    }
+
+    public void removeAllImage() {
+        File file = new File(MyPath.getPathTemp(this));
+        if (file.exists()) {
+            File f[] = file.listFiles();
+            for (File tmp : f) {
+                tmp.delete();
+            }
+        }
+    }
+
+    public boolean checkServiceCreateVideoIsRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (CreateVideoService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void registerListener(CreatedListener listener) {
+        this.listener = listener;
+    }
+
+    public CreatedListener getListener() {
+        return listener;
     }
 }

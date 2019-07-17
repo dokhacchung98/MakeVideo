@@ -108,14 +108,21 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
             case R.id.action_next:
                 if (listImage.size() > 2) {
                     CreateVideoActivity.startIntent(this);
+                    finish();
                 } else {
                     ShowLog.ShowLog(this, binding.getRoot(), "Bạn phải có ít nhất 3 ảnh trong danh sách", false);
                 }
                 break;
             case R.id.action_add:
-                this.finish();
+                SelectImageActivity.startIntent(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SelectImageActivity.startIntent(this);
     }
 }

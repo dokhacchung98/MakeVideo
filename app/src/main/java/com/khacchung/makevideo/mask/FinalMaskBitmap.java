@@ -18,7 +18,7 @@ import java.lang.reflect.Array;
 import java.util.Random;
 
 public class FinalMaskBitmap {
-    public static float ANIMATED_FRAME = 22.0f;
+    public static float ANIMATED_FRAME = 30.0f;
     public static int ANIMATED_FRAME_CAL = ((int) (ANIMATED_FRAME - 1.0f));
     public static int ORIGANAL_FRAME = 8;
     public static int TOTAL_FRAME = 30;

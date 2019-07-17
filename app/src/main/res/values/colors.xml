@@ -8,6 +8,7 @@
     <color name="colorError">#F44336</color>
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorDark">#fff</color>
+    <color name="colorDark2">#AFAFAF</color>
 
     <color name="blue_color_picker">#0066FF</color>
     <color name="brown_color_picker">#AF593E</color>

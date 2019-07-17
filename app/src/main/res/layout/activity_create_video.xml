@@ -6,6 +6,10 @@
         <variable
             name="adapter"
             type="androidx.fragment.app.FragmentStatePagerAdapter" />
+
+        <variable
+            name="handler"
+            type="com.khacchung.makevideo.handler.MyClickHandler" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +37,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:text="01:55"
                     android:textColor="@color/colorBlack"
                     android:textSize="12sp" />
 
@@ -49,19 +52,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="01:55"
                     android:textColor="@color/colorBlack"
                     android:textSize="12sp" />
             </RelativeLayout>
 
             <FrameLayout
+                android:id="@+id/fr_video"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/ln_bottom"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="0dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                android:onClick="@{(v)->handler.onClick(v)}">
 
+                <ImageView
+                    android:id="@+id/imgThumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
+
+                <ImageView
+                    android:id="@+id/imgFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
+
+                <FrameLayout
+                    android:id="@+id/fr_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#43929292">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_play_button_opacity" />
+                </FrameLayout>
             </FrameLayout>
         </RelativeLayout>
 

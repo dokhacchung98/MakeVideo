@@ -8,7 +8,7 @@
         android:id="@+id/action_save"
         android:icon="@drawable/ic_save_file_option"
         android:orderInCategory="300"
-        android:title="User"
+        android:title="@string/save_video"
         app:showAsAction="ifRoom" />
 
 </menu>

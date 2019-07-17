@@ -31,10 +31,17 @@ public class CreateVideoService extends Service {
         activity.startService(intent);
     }
 
+    public static void stopService(Activity activity) {
+        MyApplication application = MyApplication.getInstance();
+        if (application.checkServiceCreateVideoIsRunning()) {
+            Intent intent = new Intent(activity, CreateVideoService.class);
+            activity.stopService(intent);
+        }
+    }
+
     public CreateVideoService() {
         myApplication = MyApplication.getInstance();
         listImage = myApplication.getListIamge();
-
         createImages();
     }
 
@@ -44,6 +51,7 @@ public class CreateVideoService extends Service {
     }
 
     private void createImages() {
+        myApplication.removeAllImage();
         indexTempRun = 0;
         Bitmap newFirstBmp;
         Bitmap newSecondBmp2 = null;
@@ -111,6 +119,10 @@ public class CreateVideoService extends Service {
                 indexTempRun++;
             }
             i++;
+        }
+
+        if (myApplication.getListener() != null) {
+            myApplication.getListener().onSuccess(indexTempRun);
         }
     }
 }

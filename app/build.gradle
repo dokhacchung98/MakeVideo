@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.0"
     defaultConfig {
         applicationId "com.khacchung.makevideo"
-        minSdkVersion 24
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -29,10 +29,11 @@ android {
 dependencies {
     def futures_version = "1.0.0-beta01"
     def lifecycle_version = "2.0.0"
-    def ffmpeg_version = "4.2"
+    def ffmpeg_version = "1.1.1"
     def picasso_version = "2.71828"
     def photo_editor_version = "0.4.0"
     def material_version = "1.1.0-alpha07"
+    def swag_version = "1.0.2"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -53,8 +54,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
 
-    implementation "com.arthenica:mobile-ffmpeg-full-gpl:$ffmpeg_version"
+    implementation "nl.bravobit:android-ffmpeg:$ffmpeg_version"
+
     implementation "ja.burhanrashid52:photoeditor:$photo_editor_version"
 
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    implementation "com.dualcores.swagpoints:swagpoints:$swag_version"
 }

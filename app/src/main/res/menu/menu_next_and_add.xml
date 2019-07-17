@@ -8,13 +8,13 @@
         android:id="@+id/action_add"
         android:icon="@drawable/ic_plus"
         android:orderInCategory="300"
-        android:title="User"
+        android:title="@string/add_image"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_next"
         android:icon="@drawable/ic_tick"
         android:orderInCategory="300"
-        android:title="User1"
+        android:title="@string/step_next"
         app:showAsAction="ifRoom" />
 
 </menu>

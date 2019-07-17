@@ -16,8 +16,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.khacchung.makevideo.activity.PermissionActivity;
+import com.khacchung.makevideo.handler.ChangedListener;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements ChangedListener {
 
     public static final int READ_WRITE_STORAGE = 52;
     private ProgressDialog mProgressDialog;
@@ -95,6 +96,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void hideLoading() {
         if (mProgressDialog != null) {
+            mProgressDialog.cancel();
             mProgressDialog.dismiss();
         }
     }
@@ -105,5 +107,26 @@ public class BaseActivity extends AppCompatActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onChangedEffect() {
+
+    }
+
+    @Override
+    public void onChangedMusic() {
+
+    }
+
+    @Override
+    public void onChangedVideoFrame() {
+
+    }
+
+    @Override
+    public void onChangedTimeFrame() {
+
     }
 }

@@ -58,6 +58,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
 
         myApplication = MyApplication.getInstance();
 
+
         listFolder = new ArrayList<>();
         listImage = new ArrayList<>();
         listImageSelected = new ArrayList<>();
@@ -79,6 +80,17 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
         binding.setHandler(this);
 
         getAllFolderContaningImage();
+
+        if (myApplication.getListIamge().size() > 2) {
+            listImageSelected = myApplication.getListIamge();
+            showItemSeleted();
+            bindingSizeSeleted();
+            for (MyImageModel model : listImageByFolder) {
+                bindingNumberSeletedOneImage(model);
+            }
+            listImageAdapter.notifyDataSetChanged();
+            imageSeletedAdapter.notifyDataSetChanged();
+        }
     }
 
     private void getAllFolderContaningImage() {
@@ -223,6 +235,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
             if (listImageSelected.size() > 2) {
                 myApplication.setListIamge(listImageSelected);
                 MoveIndexActivity.startIntent(this);
+                finish();
             } else {
                 ShowLog.ShowLog(this, binding.getRoot(), "Bạn phải có ít nhất 3 ảnh trong danh sách", false);
             }

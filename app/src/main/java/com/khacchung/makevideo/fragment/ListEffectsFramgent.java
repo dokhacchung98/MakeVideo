@@ -62,7 +62,9 @@ public class ListEffectsFramgent extends Fragment implements MySelectedItemListe
             myApplication.setSeletedTheme(effect);
             listEffectsHorizontalAdapter.getCurrentTheme();
             listEffectsHorizontalAdapter.notifyDataSetChanged();
+
             //todo: broadcast event changed the effect
+            baseActivity.onChangedEffect();
         }
     }
 

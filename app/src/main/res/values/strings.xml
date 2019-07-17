@@ -29,4 +29,9 @@
     <string name="second_3">3 giây</string>
     <string name="second_4">4 giây</string>
     <string name="second_5">5 giây</string>
+    <string name="cancel">Hủy</string>
+    <string name="please_wait">Video đang được lưu, vui lòng chờ trong giây lát!</string>
+    <string name="move_image">Bấm giữ hình ảnh để đổi vị trí</string>
+    <string name="save_video">Lưu video</string>
+    <string name="add_image">Thêm ảnh</string>
 </resources>
