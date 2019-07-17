@@ -76,8 +76,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             finish();
         }
 
-        renderVideo();
-
         getListMusic();
 
         initEffects();
@@ -94,6 +92,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.seekbarTime.setOnSeekBarChangeListener(this);
 
         setupIconTablayout();
+
+        renderVideo();
     }
 
     private void setupIconTablayout() {
@@ -145,14 +145,12 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         }
         listMusic.clear();
 
-        MyMusicModel tmp = new MyMusicModel();
-        tmp.setSelected(true);
-        tmp.setNameMusic("Demo");
-        tmp.setPathMusic("android.resource://com.khacchung.makevideo/" + R.raw.a);
-        listMusic.add(tmp);
-
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         listMusic.addAll(GetFileFromURI.getAllMusicFromURI(this, uri.toString()));
+        if (listMusic.size() > 0) {
+            listMusic.get(0).setSelected(true);
+            myApplication.setMyMusicModel(listMusic.get(0));
+        }
     }
 
     @Override
@@ -221,7 +219,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            handler.postDelayed(this, (int) (34 * myApplication.getTimeLoad()));
+            handler.postDelayed(this, (int) (40 * myApplication.getTimeLoad()));
             setImage();
         }
     };
@@ -232,7 +230,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         sizeMaxFrame = numberOfFrames;
         hideLoading();
 
-        initVideo();
+        runOnUiThread(() -> initVideo());
     }
 
     @Override
@@ -244,6 +242,9 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onChangedTimeFrame() {
         Log.e(TAG, "onChangedTimeFrame(): " + myApplication.getTimeLoad());
+        changeTotalTime();
+        stopVideo();
+        playVideo();
     }
 
     @Override
@@ -255,7 +256,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onChangedMusic() {
         Log.e(TAG, "onChangedMusic(): " + myApplication.getMyMusicModel().getNameMusic());
-
+        stopVideo();
+        playVideo();
     }
 
     @Override
@@ -275,6 +277,13 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.frPlay.setVisibility(View.GONE);
         isPlaying = true;
         handler.post(runnable);
+    }
+
+    private void stopVideo() {
+        binding.frPlay.setVisibility(View.VISIBLE);
+        currentFrame = 0;
+        handler.removeCallbacks(runnable);
+        isPlaying = false;
     }
 
     @Override
@@ -329,4 +338,5 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private void showMess() {
         showLoading("Đang áp dụng video...");
     }
+
 }

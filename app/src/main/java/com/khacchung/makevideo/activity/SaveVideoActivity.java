@@ -3,6 +3,7 @@ package com.khacchung.makevideo.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -16,8 +17,6 @@ import com.khacchung.makevideo.databinding.ActivitySaveVideoBinding;
 import com.khacchung.makevideo.extention.CommandStringFFmpeg;
 import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.handler.MyClickHandler;
-import com.khacchung.makevideo.mask.THEMES;
-import com.khacchung.makevideo.model.MyMusicModel;
 
 import java.io.File;
 
@@ -29,11 +28,16 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     private static final String TAG = SaveVideoActivity.class.getName();
     private ActivitySaveVideoBinding binding;
     private MyApplication myApplication;
-    private String uriMusic = "";
+
     private String uriVideoFrames = "";
     private float timeLoad;
-    private int sizeOfListImage = 0;
-    private float totalTime;
+    private Handler handler = new Handler();
+
+    private boolean isFinish = false;
+    private boolean isRunEnd = false;
+    private boolean isSuccess = false;
+    private boolean isShow = false;
+    private boolean isDestinationFolder = false;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, SaveVideoActivity.class);
@@ -48,17 +52,12 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         binding.setHandler(this);
         myApplication = MyApplication.getInstance();
 
-        MyMusicModel myMusicModel = myApplication.getMyMusicModel();
-        if (myMusicModel != null) {
-            uriMusic = myMusicModel.getPathMusic();
-        }
         uriVideoFrames = myApplication.getFrameVideo();
         timeLoad = myApplication.getTimeLoad();
-        sizeOfListImage = myApplication.getListIamge().size();
-        totalTime = timeLoad * (sizeOfListImage + 1);
 
         if (FFmpeg.getInstance(this).isSupported()) {
             saveVideo();
+            handler.post(runnable);
         } else {
             ShowLog.ShowLog(this, binding.getRoot(), "Điện thoại không hỗ trợ", false);
             finish();
@@ -85,30 +84,44 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         }
         if (uriVideoFrames.isEmpty()) {
             pathSave = MyPath.getPathTempVideo(this) + MyPath.NAME_VIDEO_TEMP;
+            isDestinationFolder = false;
         } else {
             pathSave = MyPath.getPathSaveVideo(this)
                     + "video"
                     + System.currentTimeMillis() + ".mp4";
+            isDestinationFolder = true;
         }
-        String cmd[] = CommandStringFFmpeg.getCommandCreadVideoFromImageAndMusic(this, uriMusic, timeLoad, totalTime, pathSave);
+        String cmd[] = CommandStringFFmpeg.getCommandCreadVideoFromImageAndMusic(this, myApplication.getMyMusicModel(), timeLoad, pathSave);
         Log.e(TAG, cmd.toString());
 
         try {
             FFmpeg.getInstance(this).execute(cmd, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
-                    ShowLog.ShowLog(SaveVideoActivity.this, binding.getRoot(), "Lưu video thành công", true);
-                    binding.seekbarPoint.setPoints(100);
-                    myApplication.removeAllImage();
-                }
-
-                @Override
-                public void onProgress(String message) {
+                    if (isDestinationFolder) {
+                        isSuccess = true;
+                        if (isRunEnd) {
+                            ShowLog(true);
+                            process = 100;
+                            binding.seekbarPoint.setPoints(100);
+                            myApplication.removeAllImage();
+                            myApplication.initData();
+                        }
+                        isFinish = true;
+                    } else {
+                        joinVideoFrame();
+                    }
                 }
 
                 @Override
                 public void onFailure(String message) {
-                    ShowLog.ShowLog(SaveVideoActivity.this, binding.getRoot(), "Lưu video thất bại", false);
+                    if (isRunEnd) {
+                        ShowLog(false);
+                        process = 100;
+                        binding.seekbarPoint.setPoints(100);
+                        myApplication.initData();
+                    }
+                    isFinish = true;
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
@@ -116,9 +129,95 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         }
     }
 
+    private void joinVideoFrame() {
+        File file = new File(MyPath.getPathTempVideo(this));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String pathSave = MyPath.getPathSaveVideo(this)
+                + "video"
+                + System.currentTimeMillis() + ".mp4";
+        isDestinationFolder = true;
+        String cmd[] = CommandStringFFmpeg.addVideoFrame(this, myApplication.getFrameVideo(), pathSave);
+        if (cmd == null) {
+            isFinish = true;
+            if (isRunEnd) {
+                process = 100;
+                ShowLog(false);
+            }
+            return;
+        }
+        try {
+            FFmpeg.getInstance(this).execute(cmd, new ExecuteBinaryResponseHandler() {
+                @Override
+                public void onSuccess(String message) {
+                    isSuccess = true;
+                    if (isRunEnd) {
+                        ShowLog(true);
+                    }
+                    isFinish = true;
+                    process = 100;
+                    binding.seekbarPoint.setPoints(100);
+                    myApplication.removeAllImage();
+                    myApplication.initData();
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    isSuccess = false;
+                    if (isRunEnd) {
+                        ShowLog(false);
+                    }
+                    process = 100;
+                    isFinish = true;
+                    myApplication.initData();
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int process = 0;
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            process++;
+            if (process >= 100) {
+                process = 100;
+            }
+            if (process >= 97 && !isFinish) {
+                process = 97;
+                handler.removeCallbacks(this);
+                isRunEnd = true;
+            } else if (process >= 97) {
+                process = 100;
+                isRunEnd = true;
+            }
+            binding.seekbarPoint.setPoints(process);
+            handler.postDelayed(this, 100);
+            if (process == 100) {
+                ShowLog(isSuccess);
+                handler.removeCallbacks(this);
+                myApplication.initData();
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private void ShowLog(boolean isSuccess) {
+        if (!isShow) {
+            if (isSuccess) {
+                ShowLog.ShowLog(SaveVideoActivity.this, binding.getRoot(), "Lưu video thành công", true);
+            } else {
+                ShowLog.ShowLog(SaveVideoActivity.this, binding.getRoot(), "Lưu video thất bại", false);
+            }
+            isShow = true;
+        }
     }
 }
