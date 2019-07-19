@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="model"
             type="com.khacchung.makevideo.model.MyMusicModel" />
@@ -12,7 +14,7 @@
             type="com.khacchung.makevideo.handler.MyClickHandler" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ln_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,9 +34,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="8dp"
+            android:layout_toStartOf="@+id/img_cut"
+            android:layout_toEndOf="@+id/img_draw_left"
             android:lines="1"
             android:text="@{model.nameMusic}"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_cut"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_cut"
+            android:onClick="@{(v)->handler.onClickWithData(v, model)}"
+            android:visibility="@{model.selected ? View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
 </layout>

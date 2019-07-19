@@ -15,7 +15,6 @@ import com.khacchung.makevideo.databinding.RowMusicBinding;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyMusicModel;
-import com.khacchung.makevideo.model.MyTimerModel;
 import com.khacchung.makevideo.util.CodeSelectedItem;
 
 import java.util.ArrayList;
@@ -65,7 +64,15 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.MyVi
     @Override
     public void onClickWithData(View view, Object value) {
         MyMusicModel music = (MyMusicModel) value;
-        listener.selectedItem(music, CodeSelectedItem.CODE_SELECT);
+        switch (view.getId()) {
+            case R.id.ln_select: {
+                listener.selectedItem(music, CodeSelectedItem.CODE_SELECT);
+            }
+            break;
+            case R.id.img_cut:
+                listener.selectedItem(music, CodeSelectedItem.CODE_CUT);
+                break;
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

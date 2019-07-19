@@ -35,6 +35,13 @@ public class ListImageFramgent extends Fragment implements MyClickHandler {
 //        this.listImage.add(tmp);
     }
 
+    public void updateListImage(ArrayList<MyImageModel> listImage) {
+        this.listImage = listImage;
+        if (listImageHorizontalAdapter != null) {
+            listImageHorizontalAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

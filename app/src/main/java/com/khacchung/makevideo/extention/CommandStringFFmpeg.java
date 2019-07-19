@@ -89,6 +89,30 @@ public class CommandStringFFmpeg {
         };
     }
 
+    public static String[] cutSound(Context context, String pathSound, float startSecond, float sizeSound) {
+        String pathParent = MyPath.getPathTempSound(context);
+        File file = new File(pathParent);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        File fileSound = new File(pathParent + MyPath.NAME_SOUND_TEMP);
+
+        return new String[]{
+                "-y",
+                "-i",
+                pathSound,
+                "-ss",
+                startSecond + "",
+                "-t",
+                sizeSound + "",
+                "-acodec",
+                "copy",
+                fileSound.getAbsolutePath()
+        };
+    }
+
     //ffmpeg -framerate 30 -i list_image_temp\img%04d.jpg -r 25 -pix_fmt yuv420p ouuu.mp4 --none sound
     //ffmpeg -framerate 15/5 -i list_image_temp\img%04d.jpg -i a.wav -r 25 -t total_time -c:v libx264 -preset ultrafast -pix_fmt yuv420p ouuu.mp4 --with sound
+    //ffmpeg -i Images\sound.mp3 -ss 29 -t 19 -acodec copy out.mp3 -cut sound
 }

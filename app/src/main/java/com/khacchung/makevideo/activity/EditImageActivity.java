@@ -59,8 +59,8 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
         OnPhotoEditorListener,
         EmojiBSFragment.EmojiListener,
         PropertiesBSFragment.Properties {
-    private static final String URI_IMAGE = "URI_IMAGE";
-    private static final String EXTRA_REPLACE = "EXTRA_REPLACE";
+    public static final String URI_IMAGE = "URI_IMAGE";
+    public static final String EXTRA_REPLACE = "EXTRA_REPLACE";
     public static final String PATH_IMAGE_NEW = "PATH_IMAGE_NEW";
     public static final int REQUEST_CODE_EDIT_IMAGE = 456;
     private static final int CAMERA_REQUEST = 52;

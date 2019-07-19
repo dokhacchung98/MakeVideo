@@ -7,4 +7,5 @@ public class CodeSelectedItem {
     public static final int CODE_REMOVE = 4;
     public static final int CODE_SHOW_IMAGE = 5;
     public static final int CODE_SHOW_VIDEO = 6;
+    public static final int CODE_CUT = 7;
 }

@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     private String frameVideo = "";
     private THEMES seletedTheme = THEMES.Shine;
     private MyMusicModel myMusicModel = null;
+    private String pathMusic = "";
 
     private ArrayList<MyImageModel> listIamge = new ArrayList<>();
 
@@ -39,6 +40,7 @@ public class MyApplication extends Application {
         frameVideo = "";
         seletedTheme = THEMES.Shine;
         myMusicModel = null;
+        pathMusic = "";
         listIamge.clear();
     }
 
@@ -95,6 +97,7 @@ public class MyApplication extends Application {
 
     public void setMyMusicModel(MyMusicModel myMusicModel) {
         this.myMusicModel = myMusicModel;
+        this.pathMusic = "";
     }
 
     public String getPathSaveTempImage() {
@@ -103,6 +106,14 @@ public class MyApplication extends Application {
 
     public void setPathSaveTempImage(String pathSaveTempImage) {
         this.pathSaveTempImage = pathSaveTempImage;
+    }
+
+    public String getPathMusic() {
+        return pathMusic;
+    }
+
+    public void setPathMusic(String pathMusic) {
+        this.pathMusic = pathMusic;
     }
 
     public void removeAllImage() {

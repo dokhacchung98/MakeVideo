@@ -4,6 +4,7 @@ import android.content.Context;
 
 public class MyPath {
     public static final String NAME_VIDEO_TEMP = "temp_video.mp4";
+    public static final String NAME_SOUND_TEMP = "temp_sound.mp3";
 
     public static String getPathTemp(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/list_image_temp/";
@@ -27,5 +28,9 @@ public class MyPath {
 
     public static String getPathThumbnail(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/list_thumbnail/";
+    }
+
+    public static String getPathTempSound(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/list_temp_sound/";
     }
 }

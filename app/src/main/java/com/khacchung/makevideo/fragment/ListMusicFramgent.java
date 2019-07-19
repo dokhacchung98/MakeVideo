@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.khacchung.makevideo.R;
+import com.khacchung.makevideo.activity.CutSoundActivity;
 import com.khacchung.makevideo.adapter.ListMusicAdapter;
 import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
@@ -69,6 +70,9 @@ public class ListMusicFramgent extends Fragment implements MySelectedItemListene
             //todo: broadcast event changed the music
 
             baseActivity.onChangedMusic();
+        } else {
+            MyMusicModel myMusicModel = (MyMusicModel) obj;
+            CutSoundActivity.startIntent(baseActivity, myMusicModel.getPathMusic());
         }
     }
 

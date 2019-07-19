@@ -33,7 +33,6 @@ public class TimerFramgent extends Fragment implements MySelectedItemListener {
         this.baseActivity = baseActivity;
         this.myApplication = myApplication;
         this.listTimer = listTimer;
-        listTimer.get(0).setSelected(true);
     }
 
     @Nullable

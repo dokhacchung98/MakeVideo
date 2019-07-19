@@ -145,12 +145,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
             if (!pathNew.isEmpty()) {
                 File file = new File(pathNew);
                 if (file.exists()) {
-                    MyImageModel tmp = new MyImageModel();
-                    tmp.setPathImage(pathNew);
-                    tmp.setPathParent(file.getParent());
-                    tmp.setSelected(false);
-                    listImage.add(tmp);
-                    getAllImageFromPathFolder(tmp.getPathParent());
+                    CreatedFileActivity.startIntent(this);
                 }
             }
         }

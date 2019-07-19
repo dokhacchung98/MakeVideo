@@ -41,11 +41,13 @@ import com.khacchung.makevideo.model.MyTimerModel;
 import com.khacchung.makevideo.service.CreateVideoService;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class CreateVideoActivity extends BaseActivity implements CreatedListener, MyClickHandler, SeekBar.OnSeekBarChangeListener {
+    public static final int REQUEST_CUT_SOUND = 86;
     private String TAG = CreateVideoActivity.class.getName();
+    public static final int REQUEST_CODE = 56;
+
     private ActivityCreateVideoBinding binding;
     private MyApplication myApplication;
     private ArrayList<MyImageModel> listImage;
@@ -93,6 +95,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
         initViewPager();
 
+        onChangedVideoFrame();
+
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(binding.viewPager));
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
@@ -115,11 +119,20 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             listTimer = new ArrayList<>();
         }
         listTimer.clear();
+        int i = (int) myApplication.getTimeLoad();
+
         listTimer.add(new MyTimerModel(1, false));
         listTimer.add(new MyTimerModel(2, false));
         listTimer.add(new MyTimerModel(3, false));
         listTimer.add(new MyTimerModel(4, false));
         listTimer.add(new MyTimerModel(5, false));
+
+        for (MyTimerModel model : listTimer) {
+            if (model.getTime() == i) {
+                model.setSelected(true);
+                break;
+            }
+        }
     }
 
     private void initFrame() {
@@ -169,12 +182,19 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             listMusic = new ArrayList<>();
         }
         listMusic.clear();
-
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         listMusic.addAll(GetFileFromURI.getAllMusicFromURI(this, uri.toString()));
-        if (listMusic.size() > 0) {
-            listMusic.get(0).setSelected(true);
-            myApplication.setMyMusicModel(listMusic.get(0));
+
+        if (!myApplication.getPathMusic().isEmpty()) {
+            int in = listMusic.indexOf(myApplication.getMyMusicModel());
+            if (in != -1) {
+                listMusic.get(in).setSelected(true);
+            }
+        } else {
+            if (listMusic.size() > 0) {
+                listMusic.get(0).setSelected(true);
+                myApplication.setMyMusicModel(listMusic.get(0));
+            }
         }
     }
 
@@ -191,12 +211,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //todo: listener event changed image
     }
 
     private void renderVideo() {
@@ -254,9 +268,22 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onSuccess(int numberOfFrames) {
         Log.e(TAG, "onSuccess Listener service: " + numberOfFrames);
-        sizeMaxFrame = numberOfFrames;
+//        sizeMaxFrame = numberOfFrames;
         hideLoading();
 
+//        runOnUiThread(() -> initVideo());
+    }
+
+
+    @Override
+    public void onUpdate(int size) {
+        binding.seekbarTime.setSecondaryProgress(size);
+    }
+
+    @Override
+    public void onStartCreateVideo() {
+        Log.e(TAG, "onStartCreateVideo()");
+        sizeMaxFrame = (listImage.size() - 1) * 30;
         runOnUiThread(() -> initVideo());
     }
 
@@ -341,7 +368,11 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (progress >= 0 && progress <= sizeMaxFrame && fromUser) {
-            currentFrame = progress;
+            if (progress > seekBar.getSecondaryProgress()) {
+                currentFrame = seekBar.getSecondaryProgress();
+            } else {
+                currentFrame = progress;
+            }
             int tmp = (int) (((float) currentFrame / sizeMaxFrame) * totalTime * 1000);
             seekMusic(tmp);
             setImage();
@@ -374,12 +405,17 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     }
 
     private void showMess() {
-        showLoading("Đang áp dụng video...");
+//        showLoading("Đang áp dụng video...");
     }
 
     private void initMusic() {
         if (myApplication.getMyMusicModel() != null) {
-            String pathMusic = myApplication.getMyMusicModel().getPathMusic();
+            String pathMusic;
+            if (myApplication.getPathMusic().isEmpty()) {
+                pathMusic = myApplication.getMyMusicModel().getPathMusic();
+            } else {
+                pathMusic = myApplication.getPathMusic();
+            }
             if (mediaPlayer != null) {
                 mediaPlayer.release();
             }
@@ -408,7 +444,64 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private void seekMusic(int seconds) {
         if (mediaPlayer != null) {
-            mediaPlayer.seekTo(seconds);
+            if (seconds <= (mediaPlayer.getDuration() / 1000)) {
+                mediaPlayer.seekTo(seconds);
+            } else {
+                mediaPlayer.seekTo(mediaPlayer.getDuration() / 1000);
+            }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            Log.e(TAG, "onActivityResult(): with new image: " + data.getStringExtra(EditImageActivity.PATH_IMAGE_NEW));
+            String oldImg = data.getStringExtra(EditImageActivity.URI_IMAGE);
+            String newImg = data.getStringExtra(EditImageActivity.PATH_IMAGE_NEW);
+
+            for (MyImageModel model : listImage) {
+                if (model.getPathImage().equals(oldImg)) {
+                    File file = new File(newImg);
+                    if (file.exists()) {
+                        model.setPathImage(file.getAbsolutePath());
+                        model.setPathParent(file.getParent());
+                    }
+
+                    if (listImageFramgent != null) {
+                        listImageFramgent.updateListImage(listImage);
+                    }
+                    break;
+                }
+            }
+        } else if (requestCode == Activity.RESULT_OK && data != null && resultCode == REQUEST_CUT_SOUND) {
+            String pathSound = data.getStringExtra(CutSoundActivity.SOUND);
+            if (myApplication.getPathMusic().equals(pathSound)) {
+                onChangedMusic();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initVideo();
+    }
+
+    @Override
+    public void finish() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        super.finish();
     }
 }

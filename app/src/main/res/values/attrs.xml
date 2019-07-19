@@ -15,4 +15,9 @@
         <attr name="clockwise" format="boolean" />
         <attr name="enabled" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="CircleImage">
+        <attr name="border_color" format="color" />
+        <attr name="src" format="integer" />
+    </declare-styleable>
 </resources>

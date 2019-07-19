@@ -13,7 +13,6 @@ import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.MyPagerCreatedAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.ActivityCreatedFileBinding;
-import com.khacchung.makevideo.extention.GetFileFromURI;
 import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.fragment.CreatedImageFragment;
 import com.khacchung.makevideo.fragment.CreatedVideoFragment;
