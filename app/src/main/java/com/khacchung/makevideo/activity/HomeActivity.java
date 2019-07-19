@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.khacchung.makevideo.R;
+import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityHomeBinding;
@@ -26,6 +27,7 @@ import java.io.OutputStream;
 public class HomeActivity extends BaseActivity implements MyClickHandler {
     private ActivityHomeBinding binding;
     private static final String TAG = HomeActivity.class.getName();
+    private MyApplication myApplication;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, HomeActivity.class);
@@ -40,6 +42,8 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         binding.setHandler(this);
 
+        myApplication = MyApplication.getInstance();
+
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             File file = new File(MyPath.getPathFrame(this));
             if (!file.exists()) {
@@ -50,6 +54,12 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                 }
             }
         }
+
+        initMyApplication();
+    }
+
+    private void initMyApplication() {
+        myApplication.initData();
     }
 
     @Override

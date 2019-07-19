@@ -80,6 +80,6 @@ public class MyImageModel extends BaseObservable implements Serializable {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        return pathImage == ((MyImageModel) obj).getPathImage();
+        return pathImage.equals(((MyImageModel) obj).getPathImage());
     }
 }
