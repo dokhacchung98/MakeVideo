@@ -229,8 +229,9 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
         }
         if (isChange && !isSave) {
             showDialog();
+        } else {
+            super.finish();
         }
-        super.finish();
     }
 
     @Override

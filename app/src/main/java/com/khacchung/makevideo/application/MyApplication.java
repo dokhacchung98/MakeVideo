@@ -19,6 +19,8 @@ public class MyApplication extends Application {
     public static final int VIDEO_HEIGHT = 480;
     private static MyApplication instance;
 
+    private boolean isAlertSound = false;
+
     private String pathSaveTempImage;
 
     private float timeLoad = 1f;
@@ -43,6 +45,7 @@ public class MyApplication extends Application {
         myMusicModel = null;
         isEnd = true;
         pathMusic = "";
+        isAlertSound = false;
         listIamge.clear();
     }
 
@@ -108,6 +111,14 @@ public class MyApplication extends Application {
     public void setMyMusicModel(MyMusicModel myMusicModel) {
         this.myMusicModel = myMusicModel;
         this.pathMusic = "";
+    }
+
+    public boolean isAlertSound() {
+        return isAlertSound;
+    }
+
+    public void setAlertSound(boolean alertSound) {
+        isAlertSound = alertSound;
     }
 
     public String getPathSaveTempImage() {

@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.tabs.TabLayout;
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.MyPagerAdapter;
 import com.khacchung.makevideo.application.MyApplication;
@@ -63,6 +62,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private Handler handler = new Handler();
 
     private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayerTemp;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoActivity.class);
@@ -241,6 +241,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
         initMusic();
         playVideo();
+
+        compareTimeSoundAndVideo();
     }
 
     private int currentFrame = 0;
@@ -306,6 +308,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         changeTotalTime();
         stopVideo();
         playVideo();
+        compareTimeSoundAndVideo();
     }
 
     @Override
@@ -320,6 +323,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         stopVideo();
         initMusic();
         playVideo();
+        compareTimeSoundAndVideo();
     }
 
     @Override
@@ -459,10 +463,16 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private void seekMusic(int seconds) {
         if (mediaPlayer != null) {
-            if (seconds <= (mediaPlayer.getDuration() / 1000)) {
+            boolean isEnd;
+            if (seconds <= (mediaPlayer.getDuration())) {
                 mediaPlayer.seekTo(seconds);
+                isEnd = false;
             } else {
-                mediaPlayer.seekTo(mediaPlayer.getDuration() / 1000);
+                mediaPlayer.seekTo(mediaPlayer.getDuration());
+                isEnd = true;
+            }
+            if (isPlaying && !mediaPlayer.isPlaying() && !isEnd) {
+                mediaPlayer.start();
             }
         }
     }
@@ -507,6 +517,36 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
                 onChangedMusic();
             }
         }
+    }
+
+    private void compareTimeSoundAndVideo() {
+        String pathApp = myApplication.getPathMusic();
+        MyMusicModel model = myApplication.getMyMusicModel();
+        String myPath = "";
+
+        if (pathApp == null || pathApp.isEmpty()) {
+            if (model != null) {
+                myPath = model.getPathMusic();
+            }
+        } else {
+            myPath = pathApp;
+        }
+
+        if (!myPath.isEmpty()) {
+            mediaPlayerTemp = MediaPlayer.create(this, Uri.parse(myPath));
+            int sec = mediaPlayerTemp.getDuration() / 1000;
+            if (sec < totalTime) {
+                myApplication.setAlertSound(true);
+            } else {
+                myApplication.setAlertSound(false);
+            }
+            Log.e(TAG, "compareTimeSoundAndVideo(): " + myApplication.isAlertSound());
+            if (listMusicFramgent != null) {
+                listMusicFramgent.openOrCloseAlert();
+            }
+        }
+        mediaPlayerTemp.release();
+        mediaPlayerTemp = null;
     }
 
     @Override

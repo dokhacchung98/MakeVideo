@@ -29,6 +29,7 @@ public class ListMusicFramgent extends Fragment implements MySelectedItemListene
     private ArrayList<MyMusicModel> listMusic;
     private ListMusicAdapter listMusicAdapter;
     private MyApplication myApplication;
+    private boolean isAlertOpen = false;
 
     public ListMusicFramgent(BaseActivity baseActivity, ArrayList<MyMusicModel> listMusic, MyApplication myApplication) {
         this.baseActivity = baseActivity;
@@ -52,6 +53,7 @@ public class ListMusicFramgent extends Fragment implements MySelectedItemListene
         listMusicAdapter = new ListMusicAdapter(baseActivity, listMusic, this);
         binding.setMyAdapter(listMusicAdapter);
         binding.setLayoutManager(new LinearLayoutManager(baseActivity));
+        openOrCloseAlert();
     }
 
     @Override
@@ -73,6 +75,17 @@ public class ListMusicFramgent extends Fragment implements MySelectedItemListene
         } else {
             MyMusicModel myMusicModel = (MyMusicModel) obj;
             CutSoundActivity.startIntent(baseActivity, myMusicModel.getPathMusic());
+        }
+    }
+
+    public void openOrCloseAlert() {
+        if (binding != null) {
+            isAlertOpen = myApplication.isAlertSound();
+            if (isAlertOpen) {
+                binding.txtAlert.setVisibility(View.VISIBLE);
+            } else {
+                binding.txtAlert.setVisibility(View.GONE);
+            }
         }
     }
 
