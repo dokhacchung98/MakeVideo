@@ -62,6 +62,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
     public static final String URI_IMAGE = "URI_IMAGE";
     public static final String EXTRA_REPLACE = "EXTRA_REPLACE";
     public static final String PATH_IMAGE_NEW = "PATH_IMAGE_NEW";
+    public static final String INDEX_IMAGE = "INDEX_IMAGE";
     public static final int REQUEST_CODE_EDIT_IMAGE = 456;
     private static final int CAMERA_REQUEST = 52;
     private static final int PICK_REQUEST = 53;
@@ -83,6 +84,9 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
     private String uri;
     private boolean isReplace = false;
     private String newPathImage = "";
+    private boolean isSave = false;
+    private Bitmap tmpBitmap;
+    private int indexImage = -1;
 
     public static void startInternt(Context context, String uri, View view, boolean isReplace) {
         Intent intent = new Intent(context, EditImageActivity.class);
@@ -93,16 +97,28 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE/*, options.toBundle()*/);
     }
 
+    public static void startInterntWithIndex(Context context, String uri, int index, View view, boolean isReplace) {
+        Intent intent = new Intent(context, EditImageActivity.class);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation((Activity) context, view, "imgFrom");
+        intent.putExtra(URI_IMAGE, uri);
+        intent.putExtra(EXTRA_REPLACE, isReplace);
+        intent.putExtra(INDEX_IMAGE, index);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE/*, options.toBundle()*/);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeFullScreen();
+        enableBackButton();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_image);
 
         Intent intent = getIntent();
         if (intent != null) {
             uri = intent.getStringExtra(URI_IMAGE);
             isReplace = intent.getBooleanExtra(EXTRA_REPLACE, false);
+            indexImage = intent.getIntExtra(INDEX_IMAGE, -1);
         }
 
         if (uri == null) {
@@ -112,7 +128,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
 
         initViews();
 
-        Log.e(TAG, "URI: " + uri);
+        Log.e(TAG, "URI: " + uri + ", Index_Image: " + indexImage);
         binding.photoEditorView.getSource().setImageURI(Uri.parse(uri));
 
         mWonderFont = Typeface.createFromAsset(getAssets(), "beyond_wonderland.ttf");
@@ -231,7 +247,6 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
         }
     }
 
-    //todo: save have bug
     @SuppressLint("MissingPermission")
     private void saveImage() {
         newPathImage = "";
@@ -242,18 +257,12 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
         }
 
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            showLoading("Đang lưu...");
-            String path;
-
-            path = tmFile
+            showLoading(getString(R.string.saving));
+            String path = tmFile
                     + File.separator + ""
                     + System.currentTimeMillis() + ".png";
 
             File file = new File(path);
-            File tmpFile = new File(uri);
-            if (tmpFile.exists()) {
-                tmpFile.delete();
-            }
             Log.e(TAG, "Save image path: " + path);
 
             try {
@@ -268,22 +277,23 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
                         hideLoading();
-                        ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), "Lưu ảnh thành công", true);
+                        ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), getString(R.string.save_success), true);
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(path)));
+                        isSave = true;
                         newPathImage = path;
                     }
 
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         hideLoading();
-                        ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), "Lưu ảnh thất bại", false);
+                        ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), getString(R.string.save_fail), false);
                     }
                 });
 
             } catch (IOException e) {
                 e.printStackTrace();
                 hideLoading();
-                ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), "Có lỗi: " + e.getMessage(), false);
+                ShowLog.ShowLog(EditImageActivity.this, binding.getRoot(), getString(R.string.save_fail), false);
             }
         }
     }
@@ -303,7 +313,8 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
                         mPhotoEditor.clearAllViews();
                         Uri uri = data.getData();
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        mPhotoEditorView.getSource().setImageBitmap(bitmap);
+                        tmpBitmap = bitmap.copy(bitmap.getConfig(), true);
+                        mPhotoEditorView.getSource().setImageBitmap(tmpBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -345,11 +356,11 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
 
     private void showSaveDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Bạn có muốn thoát và lưu ảnh ?");
-        builder.setPositiveButton("Lưu", (dialog, which) -> saveImage());
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+        builder.setMessage(getString(R.string.ques_save_image));
+        builder.setPositiveButton(getString(R.string.save), (dialog, which) -> saveImage());
+        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
 
-        builder.setNeutralButton("Thoát", (dialog, which) -> finish());
+        builder.setNeutralButton(getString(R.string.exit), (dialog, which) -> finish());
         builder.create().show();
 
     }
@@ -433,11 +444,14 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
 
     @Override
     public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra(URI_IMAGE, uri);
-        intent.putExtra(EXTRA_REPLACE, isReplace);
-        intent.putExtra(PATH_IMAGE_NEW, newPathImage);
-        setResult(Activity.RESULT_OK, intent);
+        if (isSave) {
+            Intent intent = new Intent();
+            intent.putExtra(URI_IMAGE, uri);
+            intent.putExtra(EXTRA_REPLACE, isReplace);
+            intent.putExtra(PATH_IMAGE_NEW, newPathImage);
+            intent.putExtra(INDEX_IMAGE, indexImage);
+            setResult(Activity.RESULT_OK, intent);
+        }
         super.finish();
     }
 }

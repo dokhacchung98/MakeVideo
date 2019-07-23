@@ -14,8 +14,8 @@
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/_156sdp"
+        android:layout_height="@dimen/_124sdp"
         android:layout_margin="4dp"
         android:orientation="vertical">
 
@@ -25,5 +25,6 @@
             android:layout_height="match_parent"
             android:onClick="@{(v)->handler.onClickWithData(v, model)}"
             app:imageUri="@{model}" />
+
     </androidx.cardview.widget.CardView>
 </layout>

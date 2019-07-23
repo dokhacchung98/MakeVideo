@@ -40,7 +40,8 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitleToolbar("Chỉnh Sửa Hình Ảnh");
+        setTitleToolbar(getResources().getString(R.string.edit_image));
+        enableBackButton();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list_image_edit);
 
         listFolder = new ArrayList<>();
@@ -71,7 +72,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                 String imagePath = query.getString(query.getColumnIndex("_data"));
                 if (!imagePath.endsWith(".gif")) {
                     query.getString(columnIndex3);
-                    String string2 = query.getString(columnIndex);
+                    String nameFolder = query.getString(columnIndex);
                     boolean check = true;
                     String path = new File(imagePath).getParent();
                     for (MyFolderModel t : listFolder) {
@@ -84,7 +85,16 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                     listImage.add(new MyImageModel(imagePath, false, path));
 
                     if (check) {
-                        listFolder.add(new MyFolderModel(string2, path, false));
+                        File file[] = new File(path).listFiles();
+                        int t = 0;
+                        for (File f : file) {
+                            if (f.getName().endsWith(".png")
+                                    || f.getName().endsWith(".jpg")
+                                    || f.getName().endsWith(".jpeg")) {
+                                t++;
+                            }
+                        }
+                        listFolder.add(new MyFolderModel(nameFolder, path, false, t));
                     }
                 }
             } while (query.moveToNext());
@@ -109,32 +119,27 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
 
     @Override
     public void selectedItem(Object obj, int code) {
-        switch (code) {
-            case CodeSelectedItem.CODE_SELECT_FOLDER:
-                MyFolderModel folderModel = (MyFolderModel) obj;
-                folderModel.setSelected(false);
-                for (MyFolderModel t : listFolder) {
-                    t.setSelected(false);
-                }
-                int indexFolder = listFolder.indexOf(folderModel);
-                if (indexFolder != -1) {
-                    folderModel.setSelected(true);
-                    listFolder.set(indexFolder, folderModel);
-                    getAllImageFromPathFolder(listFolder.get(indexFolder).getPathFolder());
-                }
-                break;
-            case CodeSelectedItem.CODE_EDIT:
-                EditImageActivity.startInternt(this, ((MyImageModel) obj).getPathImage(), binding.getRoot(), false);
-                break;
-            case CodeSelectedItem.CODE_SELECT:
-                ShowImageFullScreenActivity.startIntent(this, (MyImageModel) obj);
-                break;
+        if (code == CodeSelectedItem.CODE_SELECT_FOLDER) {
+            MyFolderModel folderModel = (MyFolderModel) obj;
+            folderModel.setSelected(false);
+            for (MyFolderModel t : listFolder) {
+                t.setSelected(false);
+            }
+            int indexFolder = listFolder.indexOf(folderModel);
+            if (indexFolder != -1) {
+                folderModel.setSelected(true);
+                listFolder.set(indexFolder, folderModel);
+                getAllImageFromPathFolder(listFolder.get(indexFolder).getPathFolder());
+            }
         }
     }
 
     @Override
     public void selectedItem(Object obj, int code, int p) {
-
+        if (code == CodeSelectedItem.CODE_SELECT) {
+            MyImageModel model = (MyImageModel) obj;
+            EditImageActivity.startInterntWithIndex(this, model.getPathImage(), p, binding.getRoot(), false);
+        }
     }
 
     @Override

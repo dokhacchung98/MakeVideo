@@ -4,12 +4,13 @@
     <data>
 
         <variable
+            name="model"
+            type="com.khacchung.makevideo.model.MyImageModel" />
+
+        <variable
             name="handler"
             type="com.khacchung.makevideo.handler.MyClickHandler" />
 
-        <variable
-            name="myModel"
-            type="com.khacchung.makevideo.model.MyImageModel" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,13 +20,13 @@
         android:background="@color/colorAccent"
         android:orientation="vertical">
 
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/imgThumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onClick="@{handler.onClick}"
             android:transitionName="imgFrom"
-            app:imageUri="@{myModel.pathImage}" />
+            app:imageUri="@{model.pathImage}" />
 
         <FrameLayout
             android:id="@+id/frTop"

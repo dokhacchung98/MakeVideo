@@ -23,9 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:text="@string/change_list_timer"
-            android:textColor="@color/colorError"
-            android:textSize="12sp"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
             android:textStyle="italic" />
 
         <androidx.recyclerview.widget.RecyclerView

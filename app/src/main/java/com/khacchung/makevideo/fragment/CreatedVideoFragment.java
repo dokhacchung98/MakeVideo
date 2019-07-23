@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.khacchung.makevideo.R;
+import com.khacchung.makevideo.activity.PlayVideoActivity;
 import com.khacchung.makevideo.adapter.ListVideosCreatedAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.FragmentCreatedVideoBinding;
@@ -60,7 +61,7 @@ public class CreatedVideoFragment extends Fragment implements MySelectedItemList
     @Override
     public void selectedItem(Object obj, int code, int p) {
         if (code == CodeSelectedItem.CODE_SHOW_VIDEO && p < listVideos.size()) {
-            //todo: show video
+            PlayVideoActivity.startIntent(baseActivity, ((MyVideoModel) obj).getPathVideo());
         }
     }
 }

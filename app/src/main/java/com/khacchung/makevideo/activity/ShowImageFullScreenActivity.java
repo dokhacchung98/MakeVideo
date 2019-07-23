@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.khacchung.makevideo.R;
@@ -15,11 +16,13 @@ import com.khacchung.makevideo.databinding.ActivityShowImageFullScreenBinding;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.model.MyImageModel;
 
+
 public class ShowImageFullScreenActivity extends BaseActivity implements MyClickHandler, Animator.AnimatorListener {
     private ActivityShowImageFullScreenBinding binding;
     private static final String MODEL_IMAGE = "model_image";
     private MyImageModel myImageModel;
     private boolean isShow = false;
+    private int startIndex = 0;
 
     public static void startIntent(Activity activity, MyImageModel model) {
         Intent intent = new Intent(activity, ShowImageFullScreenActivity.class);
@@ -36,12 +39,12 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
 
         Intent intent = getIntent();
         myImageModel = (MyImageModel) intent.getSerializableExtra(MODEL_IMAGE);
+
         if (myImageModel == null) {
             ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
             finish();
         }
-        binding.setMyModel(myImageModel);
-
+        binding.setModel(myImageModel);
     }
 
     @Override

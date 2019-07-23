@@ -8,4 +8,6 @@ public interface ChangedListener {
     void onChangedVideoFrame();
 
     void onChangedTimeFrame();
+
+    void onChangedImage();
 }

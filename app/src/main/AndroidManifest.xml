@@ -13,13 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CutSoundActivity"></activity>
+
 
         <service
             android:name=".service.CreateVideoService"
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".activity.PlayVideoActivity" />
+        <activity android:name=".activity.CutSoundActivity" />
         <activity android:name=".activity.CreatedFileActivity" />
         <activity android:name=".activity.SaveVideoActivity" />
         <activity android:name=".activity.CreateVideoActivity" />

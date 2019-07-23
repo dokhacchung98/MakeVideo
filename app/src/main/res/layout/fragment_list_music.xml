@@ -24,9 +24,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/change_list_music"
-            android:textColor="@color/colorError"
-            android:textSize="12sp"
-            android:textStyle="italic" />
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:gravity="center"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_music"

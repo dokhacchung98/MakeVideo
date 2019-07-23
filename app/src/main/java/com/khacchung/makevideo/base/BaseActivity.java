@@ -129,4 +129,9 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
     public void onChangedTimeFrame() {
 
     }
+
+    @Override
+    public void onChangedImage() {
+
+    }
 }

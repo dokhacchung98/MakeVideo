@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.ImageMoveAdapter;
@@ -18,6 +19,7 @@ import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityMoveIndexBinding;
+import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.util.CodeSelectedItem;
@@ -25,7 +27,7 @@ import com.khacchung.makevideo.util.CodeSelectedItem;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MoveIndexActivity extends BaseActivity implements MySelectedItemListener {
+public class MoveIndexActivity extends BaseActivity implements MySelectedItemListener, MyClickHandler {
     private ActivityMoveIndexBinding binding;
     private MyApplication myApplication;
     private ArrayList<MyImageModel> listImage;
@@ -39,13 +41,15 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitleToolbar("Chỉnh Thứ Tự Ảnh");
+        setTitleToolbar(getResources().getString(R.string.edit_index_image));
         enableBackButton();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_move_index);
+        binding.setHandler(this);
+
         myApplication = MyApplication.getInstance();
         listImage = myApplication.getListIamge();
         if (listImage == null || listImage.size() < 3) {
-            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             finish();
         }
 
@@ -93,7 +97,7 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
             listImage.remove(p);
             adapter.notifyDataSetChanged();
         } else if (listImage.size() <= 3) {
-            ShowLog.ShowLog(this, binding.getRoot(), "Bạn phải có ít nhất 3 ảnh trong danh sách", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.need_3_image), false);
         }
     }
 
@@ -105,18 +109,13 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_next:
-                if (listImage.size() > 2) {
-                    CreateVideoActivity.startIntent(this);
-                    finish();
-                } else {
-                    ShowLog.ShowLog(this, binding.getRoot(), "Bạn phải có ít nhất 3 ảnh trong danh sách", false);
-                }
-                break;
-            case R.id.action_add:
-                SelectImageActivity.startIntent(this);
-                break;
+        if (item.getItemId() == R.id.action_next) {
+            if (listImage.size() > 2) {
+                CreateVideoActivity.startIntent(this);
+                finish();
+            } else {
+                ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.need_3_image), false);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -125,5 +124,18 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
     public void onBackPressed() {
         super.onBackPressed();
         SelectImageActivity.startIntent(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.fl_add_image) {
+            SelectImageActivity.startIntent(this);
+            finish();
+        }
+    }
+
+    @Override
+    public void onClickWithData(View view, Object value) {
+
     }
 }

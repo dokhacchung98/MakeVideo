@@ -9,6 +9,7 @@ public class MyFolderModel extends BaseObservable {
     private String nameFolder;
     private String pathFolder;
     private boolean isSelected;
+    private int sizeItem;
 
     public MyFolderModel() {
     }
@@ -19,7 +20,12 @@ public class MyFolderModel extends BaseObservable {
         this.isSelected = isSelected;
     }
 
-
+    public MyFolderModel(String nameFolder, String pathFolder, boolean isSelected, int sizeItem) {
+        this.nameFolder = nameFolder;
+        this.pathFolder = pathFolder;
+        this.isSelected = isSelected;
+        this.sizeItem = sizeItem;
+    }
 
     @Bindable
     public String getNameFolder() {
@@ -49,5 +55,15 @@ public class MyFolderModel extends BaseObservable {
     public void setSelected(boolean selected) {
         isSelected = selected;
         notifyPropertyChanged(BR.selected);
+    }
+
+    @Bindable
+    public int getSizeItem() {
+        return sizeItem;
+    }
+
+    public void setSizeItem(int sizeItem) {
+        this.sizeItem = sizeItem;
+        notifyPropertyChanged(BR.sizeItem);
     }
 }

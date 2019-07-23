@@ -255,4 +255,13 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
 
         listImageAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (!myApplication.isEnd()) {
+            CreateVideoActivity.startIntent(this);
+            finish();
+        }
+        super.onBackPressed();
+    }
 }

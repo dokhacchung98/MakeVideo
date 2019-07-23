@@ -59,7 +59,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         enableBackButton();
-        setTitle("Cắt Nhạc");
+        setTitle(getString(R.string.cut_sound));
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cut_sound);
 
         Intent intent = getIntent();
@@ -87,7 +87,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
 
     private void applySound() {
         cutSound();
-        showLoading("Đang áp dụng, vui lòng chờ...");
+        showLoading(getString(R.string.apply_in_video));
     }
 
     private void initSound() {
@@ -151,7 +151,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
         if (item.getItemId() == R.id.action_save) {
             myApplication.setPathMusic(currentSound);
             isSave = true;
-            ShowLog.ShowLog(this, binding.getRoot(), "Đã áp dụng nhạc vào video", true);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.apply_success), true);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -188,7 +188,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
 
                 @Override
                 public void onFailure(String message) {
-                    ShowLog.ShowLog(CutSoundActivity.this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+                    ShowLog.ShowLog(CutSoundActivity.this, binding.getRoot(), getString(R.string.errror), false);
                     hideLoading();
                 }
             });
@@ -248,17 +248,16 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
 
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chú ý");
-        builder.setMessage("Bạn có muốn áp dụng file cắt nhạc này làm nhạc nền không?");
+        builder.setTitle(getString(R.string.alert));
+        builder.setMessage(getString(R.string.apply_sound));
         builder.setCancelable(false);
-        builder.setPositiveButton("Đồng ý", (dialogInterface, i) -> {
-            ShowLog.ShowLog(CutSoundActivity.this, binding.getRoot(), "Đã áp dụng", true);
+        builder.setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
+            ShowLog.ShowLog(CutSoundActivity.this, binding.getRoot(), getString(R.string.apply_success), true);
             myApplication.setPathMusic(currentSound);
             isSave = true;
             finish();
         });
-        builder.setNegativeButton("Hủy", (dialogInterface, i) -> {
-            ShowLog.ShowLog(CutSoundActivity.this, binding.getRoot(), "Đã áp dụng", true);
+        builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
             isChange = false;
             finish();
         });

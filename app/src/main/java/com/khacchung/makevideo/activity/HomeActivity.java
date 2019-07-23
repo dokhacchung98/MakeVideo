@@ -43,15 +43,16 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         binding.setHandler(this);
 
         myApplication = MyApplication.getInstance();
+        myApplication.initData();
 
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             File file = new File(MyPath.getPathFrame(this));
             if (!file.exists()) {
                 file.mkdirs();
-                if (file.listFiles().length == 0) {
-                    showLoading("Đang lưu trữ dữ liệu, vui lòng đợi...");
-                    copyAssets();
-                }
+            }
+            if (file.listFiles().length == 0) {
+                showLoading("Đang lưu trữ dữ liệu, vui lòng đợi...");
+                copyImage();
             }
         }
 
@@ -82,7 +83,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
 
     }
 
-    private void copyAssets() {
+    private void copyImage() {
         AssetManager assetManager = getAssets();
         String[] files;
         try {
@@ -101,6 +102,50 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
             try {
                 String pathSave = MyPath.getPathFrame(this);
                 in = assetManager.open("frames/" + filename);
+                File outFile = new File(pathSave, filename);
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+                in.close();
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to copy asset file: " + filename, e);
+                hideLoading();
+                ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+                return;
+            }
+        }
+        File file = new File(MyPath.getPathFrame(this));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        if (file.listFiles().length == 0) {
+            copySound();
+        } else {
+            hideLoading();
+            ShowLog.ShowLog(this, binding.getRoot(), "Lưu trữ thành công", true);
+        }
+    }
+
+    private void copySound() {
+        AssetManager assetManager = getAssets();
+        String[] files;
+        try {
+            files = assetManager.list("sound");
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to get asset file list.", e);
+            hideLoading();
+            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            return;
+        }
+
+        assert files != null;
+        for (String filename : files) {
+            InputStream in;
+            OutputStream out;
+            try {
+                String pathSave = MyPath.getPathSound(this);
+                in = assetManager.open("sound/" + filename);
                 File outFile = new File(pathSave, filename);
                 out = new FileOutputStream(outFile);
                 copyFile(in, out);

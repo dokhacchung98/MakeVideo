@@ -19,18 +19,36 @@
         android:background="@{myModel.selected ? @drawable/boder_selected : null}"
         android:gravity="center"
         android:onClick="@{(v)->handler.onClickWithData(v, myModel)}"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
 
-        <ImageView
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_folder" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:src="@drawable/ic_folder" />
+
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/background_yellow"
+                android:gravity="center"
+                android:text="@{myModel.sizeItem+``}"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{myModel.nameFolder}"
-            android:textColor="@color/colorBlack"
+            android:textColor="@{myModel.selected ? @color/colorWhite : @color/colorBlack}"
             android:textSize="12sp" />
     </LinearLayout>
 </layout>

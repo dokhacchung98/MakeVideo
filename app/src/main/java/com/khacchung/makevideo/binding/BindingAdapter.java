@@ -31,7 +31,7 @@ public class BindingAdapter {
 
     @androidx.databinding.BindingAdapter({"app:imageUri"})
     public static void loadImageUri(ImageView imageView, String uri) {
-        if (!uri.isEmpty()) {
+        if (uri != null && !uri.isEmpty()) {
             Picasso.get().load(new File(uri)).centerCrop().fit().into(imageView);
         }
     }

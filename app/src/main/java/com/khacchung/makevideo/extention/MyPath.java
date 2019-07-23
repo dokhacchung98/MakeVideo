@@ -26,6 +26,10 @@ public class MyPath {
         return context.getFilesDir().getAbsolutePath() + "/frames/";
     }
 
+    public static String getPathSound(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/sound/";
+    }
+
     public static String getPathThumbnail(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/list_thumbnail/";
     }

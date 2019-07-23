@@ -26,6 +26,7 @@ public class MyApplication extends Application {
     private THEMES seletedTheme = THEMES.Shine;
     private MyMusicModel myMusicModel = null;
     private String pathMusic = "";
+    private boolean isEnd = true;
 
     private ArrayList<MyImageModel> listIamge = new ArrayList<>();
 
@@ -40,6 +41,7 @@ public class MyApplication extends Application {
         frameVideo = "";
         seletedTheme = THEMES.Shine;
         myMusicModel = null;
+        isEnd = true;
         pathMusic = "";
         listIamge.clear();
     }
@@ -49,6 +51,14 @@ public class MyApplication extends Application {
         super.onCreate();
         instance = this;
         pathSaveTempImage = MyPath.getPathTemp(this);
+    }
+
+    public boolean isEnd() {
+        return isEnd;
+    }
+
+    public void setEnd(boolean end) {
+        isEnd = end;
     }
 
     public float getTimeLoad() {

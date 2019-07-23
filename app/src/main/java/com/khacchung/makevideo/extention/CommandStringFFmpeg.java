@@ -75,6 +75,20 @@ public class CommandStringFFmpeg {
         };
     }
 
+    public static String[] moveVideo(Context context, String pathSave) {
+        String pathVideo = MyPath.getPathTempVideo(context) + MyPath.NAME_VIDEO_TEMP;
+        File file = new File(pathVideo);
+        if (!file.exists()) {
+            return null;
+        }
+        return new String[]{
+                "-y",
+                "-i",
+                file.getAbsolutePath(),
+                pathSave
+        };
+    }
+
     public static String[] copyThumbnail(Context context, String sourceImage, String nameImage) {
         String parentPath = MyPath.getPathThumbnail(context);
         File file = new File(parentPath);

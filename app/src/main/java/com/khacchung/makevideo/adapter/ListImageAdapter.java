@@ -52,28 +52,19 @@ public class ListImageAdapter extends RecyclerView.Adapter<ListImageAdapter.MyVi
         holder.binding.setMyClick(new MyClickHandler() {
             @Override
             public void onClick(View view) {
-                if (view.getId() == R.id.imgThumbnail && position == listModel.size() - 1) {
-                    //todo: goback to seleted image
-                }
+
             }
 
             @Override
             public void onClickWithData(View view, Object value) {
                 if (selectedItemListener != null)
-                    switch (view.getId()) {
-                        case R.id.imgThumbnail:
-                            selectedItemListener.selectedItem(value, CodeSelectedItem.CODE_SELECT);
-                            break;
-                        case R.id.btnEdit:
-                            selectedItemListener.selectedItem(value, CodeSelectedItem.CODE_EDIT);
-                            break;
+                    if (view.getId() == R.id.imgThumbnail) {
+                        selectedItemListener.selectedItem(value, CodeSelectedItem.CODE_SELECT, position);
+                        selectedItemListener.selectedItem(value, CodeSelectedItem.CODE_SELECT);
                     }
             }
         });
         holder.binding.setMyImageModel(model);
-        if (position == listModel.size() - 1) {
-            holder.binding.btnEdit.setVisibility(View.GONE);
-        }
     }
 
     @Override

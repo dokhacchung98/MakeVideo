@@ -12,27 +12,29 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.khacchung.makevideo.R;
+import com.khacchung.makevideo.activity.EditImageActivity;
+import com.khacchung.makevideo.activity.SelectImageActivity;
 import com.khacchung.makevideo.adapter.ListImageHorizontalAdapter;
+import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.FragmentListImageBinding;
-import com.khacchung.makevideo.handler.MyClickHandler;
+import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyImageModel;
+import com.khacchung.makevideo.util.CodeSelectedItem;
 
 import java.util.ArrayList;
 
-public class ListImageFramgent extends Fragment implements MyClickHandler {
+public class ListImageFramgent extends Fragment implements MySelectedItemListener {
     private FragmentListImageBinding binding;
     private BaseActivity baseActivity;
     private ListImageHorizontalAdapter listImageHorizontalAdapter;
     private ArrayList<MyImageModel> listImage;
+    private MyApplication myApplication;
 
-    public ListImageFramgent(BaseActivity baseActivity, ArrayList<MyImageModel> listImage) {
+    public ListImageFramgent(BaseActivity baseActivity, ArrayList<MyImageModel> listImage, MyApplication myApplication) {
         this.baseActivity = baseActivity;
         this.listImage = listImage;
-//        MyImageModel tmp = new MyImageModel();
-//        tmp.setSelected(false);
-//        tmp.setPathImage("");
-//        this.listImage.add(tmp);
+        this.myApplication = myApplication;
     }
 
     public void updateListImage(ArrayList<MyImageModel> listImage) {
@@ -55,18 +57,25 @@ public class ListImageFramgent extends Fragment implements MyClickHandler {
     @Override
     public void onStart() {
         super.onStart();
-        listImageHorizontalAdapter = new ListImageHorizontalAdapter(baseActivity, listImage);
+        listImageHorizontalAdapter = new ListImageHorizontalAdapter(baseActivity, listImage, this);
         binding.setLayoutManager(new LinearLayoutManager(baseActivity, LinearLayoutManager.HORIZONTAL, false));
         binding.setMyAdapter(listImageHorizontalAdapter);
     }
 
     @Override
-    public void onClick(View view) {
+    public void selectedItem(Object obj, int code) {
 
     }
 
     @Override
-    public void onClickWithData(View view, Object value) {
-
+    public void selectedItem(Object obj, int code, int p) {
+        if (code == CodeSelectedItem.CODE_SELECT) {
+            MyImageModel model = (MyImageModel) obj;
+            myApplication.setEnd(false);
+            EditImageActivity.startInterntWithIndex(baseActivity, model.getPathImage(), p, binding.getRoot(), true);
+        } else if (code == CodeSelectedItem.CODE_ADD) {
+            SelectImageActivity.startIntent(baseActivity);
+            baseActivity.finish();
+        }
     }
 }

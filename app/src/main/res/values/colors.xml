@@ -62,4 +62,5 @@
     <color name="color_material_38">#546e7a</color>
     <color name="color_material_39">#030303</color>
     <color name="color_material_40">#ffffff</color>
+    <color name="dark">#303030</color>
 </resources>
