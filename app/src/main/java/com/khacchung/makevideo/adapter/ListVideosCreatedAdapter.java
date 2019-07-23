@@ -55,7 +55,14 @@ public class ListVideosCreatedAdapter extends RecyclerView.Adapter<ListVideosCre
 
             @Override
             public void onClickWithData(View view, Object value) {
-                listener.selectedItem(value, CodeSelectedItem.CODE_SHOW_VIDEO, position);
+                switch (view.getId()) {
+                    case R.id.img_play:
+                        listener.selectedItem(value, CodeSelectedItem.CODE_SHOW_VIDEO, position);
+                        break;
+                    case R.id.btnDelete:
+                        listener.selectedItem(value, CodeSelectedItem.CODE_REMOVE, position);
+                        break;
+                }
             }
         });
     }

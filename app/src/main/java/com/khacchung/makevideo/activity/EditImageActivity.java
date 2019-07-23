@@ -281,6 +281,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
                         mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(path)));
                         isSave = true;
                         newPathImage = path;
+                        finish();
                     }
 
                     @Override

@@ -99,13 +99,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!--<com.google.android.material.tabs.TabLayout-->
-            <!--android:id="@+id/tab_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="#03A9F4"-->
-            <!--app:tabSelectedTextColor="#2196F3"-->
-            <!--app:tabTextColor="@color/colorWhite" />-->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                style="@style/CustomTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable" />
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/view_pager"
@@ -113,9 +112,10 @@
                 android:layout_height="match_parent"
                 app:adapter="@{adapter}">
 
-                <androidx.viewpager.widget.PagerTabStrip
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                <!--<androidx.viewpager.widget.PagerTabStrip-->
+                <!--style="@style/CustomTabLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
             </androidx.viewpager.widget.ViewPager>
         </LinearLayout>
     </LinearLayout>

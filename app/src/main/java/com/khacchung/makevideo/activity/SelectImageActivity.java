@@ -104,7 +104,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                 String imagePath = query.getString(query.getColumnIndex("_data"));
                 if (!imagePath.endsWith(".gif")) {
                     query.getString(columnIndex3);
-                    String string2 = query.getString(columnIndex);
+                    String nameFolder = query.getString(columnIndex);
                     boolean check = true;
                     String path = new File(imagePath).getParent();
                     for (MyFolderModel t : listFolder) {
@@ -117,7 +117,16 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                     listImage.add(new MyImageModel(imagePath, false, path));
 
                     if (check) {
-                        listFolder.add(new MyFolderModel(string2, path, false));
+                        File file[] = new File(path).listFiles();
+                        int t = 0;
+                        for (File f : file) {
+                            if (f.getName().endsWith(".png")
+                                    || f.getName().endsWith(".jpg")
+                                    || f.getName().endsWith(".jpeg")) {
+                                t++;
+                            }
+                        }
+                        listFolder.add(new MyFolderModel(nameFolder, path, false, t));
                     }
                 }
             } while (query.moveToNext());

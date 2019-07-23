@@ -14,25 +14,116 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnEditImage"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->handler.onClick(v)}"
-            android:text="Edit image" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/btnCreateVideo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->handler.onClick(v)}"
-            android:text="Create video" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnCreatedFile"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->handler.onClick(v)}"
-            android:text="Da Tao" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/_16sdp">
+
+            <Button
+                android:id="@+id/btnEditImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_button_home"
+                android:onClick="@{(v)->handler.onClick(v)}"
+                android:text="@string/edit_image"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/btnCreateVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnEditImage"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@drawable/background_button_home"
+                android:onClick="@{(v)->handler.onClick(v)}"
+                android:text="@string/create_video"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/btnCreatedFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnCreateVideo"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@drawable/background_button_home"
+                android:onClick="@{(v)->handler.onClick(v)}"
+                android:text="Danh Sách Đã Tạo"
+                android:textColor="@color/colorPrimary" />
+
+            <FrameLayout
+                android:id="@+id/fmFeedBack"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btnFeedBack"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_circle_home"
+                    android:drawableTop="@drawable/ic_feedack" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/fmShare"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/fmFeedBack">
+
+                <Button
+                    android:id="@+id/btnShare"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_circle_home"
+                    android:drawableTop="@drawable/ic_share" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/fmOut"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btnOut"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_circle_home"
+                    android:drawableTop="@drawable/ic_logout" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/fmMore"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_toStartOf="@+id/fmOut">
+
+                <Button
+                    android:id="@+id/btnMore"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_circle_home"
+                    android:drawableTop="@drawable/ic_more" />
+            </FrameLayout>
+        </RelativeLayout>
+
+
     </LinearLayout>
 </layout>

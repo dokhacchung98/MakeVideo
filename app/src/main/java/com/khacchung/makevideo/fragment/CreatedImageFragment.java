@@ -72,6 +72,11 @@ public class CreatedImageFragment extends Fragment implements MySelectedItemList
             model.setSelected(false);
             model.setNumberOfSeleted(0);
             ShowImageFullScreenActivity.startIntent(baseActivity, model);
+        } else if (code == CodeSelectedItem.CODE_REMOVE && p < listImage.size()) {
+            baseActivity.showDialogDeleteFile(obj.toString(), binding.getRoot(), () -> {
+                listImage.remove(p);
+                listImageIsCreatedAdapter.notifyDataSetChanged();
+            });
         }
     }
 }

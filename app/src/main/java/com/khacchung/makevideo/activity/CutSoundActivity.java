@@ -152,6 +152,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
             myApplication.setPathMusic(currentSound);
             isSave = true;
             ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.apply_success), true);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

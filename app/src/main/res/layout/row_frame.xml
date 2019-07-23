@@ -12,7 +12,7 @@
             type="com.khacchung.makevideo.handler.MyClickHandler" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="@dimen/_186sdp"
         android:layout_height="match_parent"
         android:layout_margin="4dp">
@@ -22,14 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onClick="@{(v)->handler.onClickWithData(v, model)}"
-            android:src="@{model.pathFrame}"
-            android:visibility="gone" />
+            android:src="@{model.pathFrame}" />
 
         <FrameLayout
             android:id="@+id/img_checked"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#52202020">
+            android:background="#52202020"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/_64sdp"
@@ -37,5 +37,5 @@
                 android:layout_gravity="center"
                 android:src="@drawable/ic_tick" />
         </FrameLayout>
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

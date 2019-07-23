@@ -6,17 +6,23 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.activity.PermissionActivity;
 import com.khacchung.makevideo.handler.ChangedListener;
+import com.khacchung.makevideo.handler.MyCallBack;
+
+import java.io.File;
 
 public class BaseActivity extends AppCompatActivity implements ChangedListener {
 
@@ -99,6 +105,26 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
             mProgressDialog.cancel();
             mProgressDialog.dismiss();
         }
+    }
+
+    public void showDialogDeleteFile(String pathFile, View view, MyCallBack callBack) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.alert));
+        builder.setMessage(getString(R.string.ques_delete));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
+            File file = new File(pathFile);
+            if (file.exists()) {
+                file.delete();
+            }
+            ShowLog.ShowLog(this, view, getString(R.string.delete_suc), true);
+            callBack.onSuccess();
+        });
+        builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"
             android:layout_margin="4dp"
-            android:onClick="@{(v)->hadler.onClickWithData(v, model)}"
-            android:src="@drawable/ic_cancel" />
+            android:background="@drawable/background_bin"
+            android:onClick="@{(v)->hadler.onClickWithData(v, model)}" />
     </FrameLayout>
 </layout>

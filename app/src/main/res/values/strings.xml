@@ -56,4 +56,6 @@
     <string name="ques_cancel_video">Bạn có muốn hủy khởi tạo video không? Trong trường hợp video đã tạo thành công trước, video sẽ bị xóa!</string>
     <string name="mobile_not_sup">Điện thoại không hỗ trợ</string>
     <string name="cancel_success">Đã hủy thành công</string>
+    <string name="ques_delete">Bạn có chắc chắn muốn xóa file này không?</string>
+    <string name="delete_suc">Xóa file thành công</string>
 </resources>

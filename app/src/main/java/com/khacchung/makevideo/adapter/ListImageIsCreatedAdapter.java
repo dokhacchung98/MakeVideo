@@ -54,7 +54,14 @@ public class ListImageIsCreatedAdapter extends RecyclerView.Adapter<ListImageIsC
 
             @Override
             public void onClickWithData(View view, Object value) {
-                listener.selectedItem(value, CodeSelectedItem.CODE_SHOW_IMAGE, position);
+                switch (view.getId()) {
+                    case R.id.imgThumbnail:
+                        listener.selectedItem(value, CodeSelectedItem.CODE_SHOW_IMAGE, position);
+                        break;
+                    case R.id.btnDelete:
+                        listener.selectedItem(value, CodeSelectedItem.CODE_REMOVE, position);
+                        break;
+                }
             }
         });
     }

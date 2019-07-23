@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -62,6 +63,12 @@ public class CreatedVideoFragment extends Fragment implements MySelectedItemList
     public void selectedItem(Object obj, int code, int p) {
         if (code == CodeSelectedItem.CODE_SHOW_VIDEO && p < listVideos.size()) {
             PlayVideoActivity.startIntent(baseActivity, ((MyVideoModel) obj).getPathVideo());
+        } else if (code == CodeSelectedItem.CODE_REMOVE && p < listVideos.size()) {
+            baseActivity.showDialogDeleteFile(((MyVideoModel) obj).getPathVideo(), binding.getRoot(), () -> {
+                listVideos.remove(p);
+                listVideosCreatedAdapter.notifyDataSetChanged();
+            });
         }
     }
+
 }
