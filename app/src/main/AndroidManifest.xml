@@ -16,11 +16,15 @@
         android:theme="@style/AppTheme">
 
 
-        <service
-            android:name=".service.CreateVideoService"
-            android:enabled="true"
-            android:exported="true" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.PlayVideoActivity"
             android:configChanges="orientation|screenSize" />
@@ -54,15 +58,12 @@
         <activity
             android:name=".activity.EditImageActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.HomeActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <service
+            android:name=".service.CreateVideoService"
+            android:enabled="true"
+            android:exported="true" />
+
     </application>
 
 </manifest>

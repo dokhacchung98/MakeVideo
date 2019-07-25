@@ -4,19 +4,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowContentTransitions">true</item>
 
         <item name="radioButtonStyle">@style/Widget.MaterialComponents.CompoundButton.RadioButton
-        </item>
-
-        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
-        <item name="android:windowExitTransition">@transition/change_image_transform</item>
-
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_image_transform
-        </item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_image_transform
         </item>
     </style>
 
@@ -36,6 +25,4 @@
         <item name="tabTextColor">#81FFFFFF</item>
         <item name="tabSelectedTextColor">@color/colorWhite</item>
     </style>
-
-    <style name="MyStyle" parent=""></style>
 </resources>

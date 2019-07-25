@@ -25,6 +25,7 @@
             android:id="@+id/rvListImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="4dp"
             app:adapter="@{my_adapter}"
             app:layoutGridManager="@{layout_manager}" />
 
@@ -46,7 +47,7 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="@dimen/_32sdp"
             android:onClick="@{(v)->handler.onClick(v)}"
-            android:src="@drawable/ic_plus"
+            android:src="@drawable/ic_baseline_add_24px"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="normal" />
     </FrameLayout>

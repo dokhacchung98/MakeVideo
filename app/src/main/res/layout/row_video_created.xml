@@ -31,7 +31,7 @@
             android:layout_height="@dimen/_48sdp"
             android:layout_gravity="center"
             android:onClick="@{(v)->handler.onClickWithData(v, model)}"
-            android:src="@drawable/ic_play_button_opacity" />
+            android:src="@drawable/ic_sb_play_circle" />
 
         <Button
             android:id="@+id/btnDelete"

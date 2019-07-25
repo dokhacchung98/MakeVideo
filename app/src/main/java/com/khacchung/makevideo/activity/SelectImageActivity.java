@@ -108,7 +108,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                     query.getString(columnIndex3);
                     String nameFolder = query.getString(columnIndex);
                     boolean check = true;
-                    String path = new File(imagePath).getParent();
+                    String path = new File(imagePath).getParent() + "/";
                     for (MyFolderModel t : listFolder) {
                         if (t.getPathFolder().trim().equals(path.trim())) {
                             check = false;
@@ -129,7 +129,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                             }
                         }
 
-                        if (!tmp.contains(path)) {
+                        if (!path.equals(tmp)) {
                             listFolder.add(new MyFolderModel(nameFolder, path, false, t));
                         }
                     }

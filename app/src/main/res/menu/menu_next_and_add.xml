@@ -12,7 +12,7 @@
         <!--app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/action_next"
-        android:icon="@drawable/ic_tick"
+        android:icon="@drawable/ic_baseline_check_24px"
         android:orderInCategory="300"
         android:title="@string/step_next"
         app:showAsAction="ifRoom" />

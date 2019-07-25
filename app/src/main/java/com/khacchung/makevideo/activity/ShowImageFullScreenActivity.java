@@ -55,11 +55,11 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
             case R.id.txtBack:
                 finish();
                 break;
-            case R.id.btnEdit:
-                EditImageActivity.startInternt(this, myImageModel.getPathImage(), binding.getRoot(), false);
-                show();
-                finish();
-                break;
+//            case R.id.btnEdit:
+//                EditImageActivity.startInternt(this, myImageModel.getPathImage(), binding.getRoot(), false);
+//                show();
+//                finish();
+//                break;
             case R.id.btnShare:
                 intentShareImage(myImageModel.getPathImage());
                 break;

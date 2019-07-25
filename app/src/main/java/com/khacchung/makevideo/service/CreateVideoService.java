@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.handler.CreatedListener;

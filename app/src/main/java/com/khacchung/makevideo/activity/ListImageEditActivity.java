@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.FolderAdapter;
@@ -77,7 +76,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                     query.getString(columnIndex3);
                     String nameFolder = query.getString(columnIndex);
                     boolean check = true;
-                    String path = new File(imagePath).getParent();
+                    String path = new File(imagePath).getParent() + "/";
                     for (MyFolderModel t : listFolder) {
                         if (t.getPathFolder().trim().equals(path.trim())) {
                             check = false;
@@ -98,8 +97,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                             }
                         }
 
-                        Log.e("TAGTAGTAG", tmp + " -------- " + path);
-                        if (!tmp.contains(path)) {
+                        if (!tmp.equals(path)) {
                             listFolder.add(new MyFolderModel(nameFolder, path, false, t));
                         }
                     }

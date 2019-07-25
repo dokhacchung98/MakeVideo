@@ -1,5 +1,6 @@
 package com.khacchung.makevideo.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
@@ -100,7 +101,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                     CreatedFileActivity.startIntent(this);
                     break;
                 case R.id.btnOut:
-                    finish();
+                    showDialogAlertExit();
                 case R.id.btnFeedBack:
                     feedback();
                     break;
@@ -211,5 +212,20 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
+    }
+
+    private void showDialogAlertExit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.alert));
+        builder.setMessage(getString(R.string.alert_exit));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
+            finish();
+        });
+        builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

@@ -72,7 +72,7 @@
             android:id="@+id/linear_layout_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
+            android:background="#F5F5F5"
             android:elevation="4dp"
             app:behavior_peekHeight="200dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -108,6 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/rvTop"
+                android:padding="4dp"
                 app:adapter="@{seleted_adapter}"
                 app:layoutGridManager="@{layout_manager_selected}" />
         </RelativeLayout>

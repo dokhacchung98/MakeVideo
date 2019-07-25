@@ -31,7 +31,7 @@
             android:layout_gravity="top|right"
             android:layout_marginTop="12dp"
             android:layout_marginRight="12dp"
-            android:background="@drawable/ic_paint_brush"
+            android:background="@drawable/background_edit"
             android:onClick="@{(v)->handler.onClickWithData(v, model)}" />
     </androidx.cardview.widget.CardView>
 </layout>
