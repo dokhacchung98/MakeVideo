@@ -64,7 +64,7 @@ public class CreatedFileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setElevation(0);
-        setTitleToolbar("Danh Sách Đã Tạo");
+        setTitleToolbar(getString(R.string.file_created));
         enableBackButton();
 
         binding.tlCreated.setupWithViewPager(binding.vpCreated);
@@ -97,14 +97,15 @@ public class CreatedFileActivity extends BaseActivity {
             file2.mkdirs();
         }
         File file[] = new File(parentPath).listFiles();
-        if (file.length > 0)
-            for (File f : file) {
-                String name = f.getName();
-                listVideos.add(new MyVideoModel(f.getAbsolutePath(),
-                        MyPath.getPathThumbnail(this)
-                                + name.replaceAll(".mp4", ".png")));
-                Log.e(TAG, "getAllVideosIsCreated(): " + f.getAbsolutePath());
-            }
+        if (file != null)
+            if (file.length > 0)
+                for (File f : file) {
+                    String name = f.getName();
+                    listVideos.add(new MyVideoModel(f.getAbsolutePath(),
+                            MyPath.getPathThumbnail(this)
+                                    + name.replaceAll(".mp4", ".png")));
+                    Log.e(TAG, "getAllVideosIsCreated(): " + f.getAbsolutePath());
+                }
     }
 
     private void getAllImagesIsCreated() {
@@ -115,19 +116,20 @@ public class CreatedFileActivity extends BaseActivity {
             file2.mkdirs();
         }
         File listFile[] = new File(parentPath).listFiles();
-        if (listFile.length > 0)
-            if (listFile != null) {
-                for (File file : listFile) {
-                    if (!file.isDirectory()) {
-                        if (file.getName().endsWith(".png")
-                                || file.getName().endsWith(".jpg")
-                                || file.getName().endsWith(".jpeg")) {
-                            if (!listImages.contains(file.getAbsolutePath()))
-                                listImages.add(file.getAbsolutePath());
-                            Log.e(TAG, "getAllImagesIsCreated(): " + file.getAbsolutePath());
+        if (listFile != null)
+            if (listFile.length > 0)
+                if (listFile != null) {
+                    for (File file : listFile) {
+                        if (!file.isDirectory()) {
+                            if (file.getName().endsWith(".png")
+                                    || file.getName().endsWith(".jpg")
+                                    || file.getName().endsWith(".jpeg")) {
+                                if (!listImages.contains(file.getAbsolutePath()))
+                                    listImages.add(file.getAbsolutePath());
+                                Log.e(TAG, "getAllImagesIsCreated(): " + file.getAbsolutePath());
+                            }
                         }
                     }
                 }
-            }
     }
 }

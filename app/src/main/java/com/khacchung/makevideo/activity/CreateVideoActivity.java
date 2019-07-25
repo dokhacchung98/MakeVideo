@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.MyPagerAdapter;
@@ -29,6 +31,7 @@ import com.khacchung.makevideo.fragment.ListEffectsFramgent;
 import com.khacchung.makevideo.fragment.ListImageFramesFramgent;
 import com.khacchung.makevideo.fragment.ListImageFramgent;
 import com.khacchung.makevideo.fragment.ListMusicFramgent;
+import com.khacchung.makevideo.fragment.QualityFramgent;
 import com.khacchung.makevideo.fragment.TimerFramgent;
 import com.khacchung.makevideo.handler.CreatedListener;
 import com.khacchung.makevideo.handler.MyClickHandler;
@@ -36,13 +39,15 @@ import com.khacchung.makevideo.mask.THEMES;
 import com.khacchung.makevideo.model.MyFrameModel;
 import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.model.MyMusicModel;
+import com.khacchung.makevideo.model.MyQualityModel;
 import com.khacchung.makevideo.model.MyTimerModel;
+import com.khacchung.makevideo.model.MyVector;
 import com.khacchung.makevideo.service.CreateVideoService;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class CreateVideoActivity extends BaseActivity implements CreatedListener, MyClickHandler, SeekBar.OnSeekBarChangeListener {
+public class CreateVideoActivity extends BaseActivity implements CreatedListener, MyClickHandler, SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
     public static final int REQUEST_CUT_SOUND = 86;
     private String TAG = CreateVideoActivity.class.getName();
 
@@ -53,16 +58,20 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private ArrayList<THEMES> listEffect;
     private ArrayList<MyTimerModel> listTimer;
     private ArrayList<MyFrameModel> listFrame;
+    private ArrayList<MyQualityModel> listQuality;
 
     private ListImageFramgent listImageFramgent;
     private ListEffectsFramgent listEffectsFramgent;
     private ListMusicFramgent listMusicFramgent;
     private ListImageFramesFramgent listImageFramesFramgent;
     private TimerFramgent timerFramgent;
+    private QualityFramgent qualityFramgent;
     private Handler handler = new Handler();
 
     private MediaPlayer mediaPlayer;
     private MediaPlayer mediaPlayerTemp;
+
+    private boolean isLoadingSuccess = false;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoActivity.class);
@@ -75,6 +84,23 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         enableBackButton();
         setTitleToolbar(getString(R.string.create_video));
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_video);
+
+        MyVector vector = getWidthAndHeight();
+        int myW;
+        int myH;
+        if (vector.getHeight() > vector.getWidth()) {
+            myW = vector.getWidth();
+            myH = (int) ((float) myW / 1.778);
+        } else {
+            myH = (int) ((float) vector.getHeight() / 2) - 100;
+            myW = (int) ((float) myH * 1.778);
+        }
+
+        binding.frVideo.setLayoutParams(new FrameLayout.LayoutParams(
+                myW,
+                myH
+        ));
+
         myApplication = MyApplication.getInstance();
         myApplication.registerListener(this);
         myApplication.setEnd(true);
@@ -93,6 +119,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         initEffects();
         initTimer();
         initFrame();
+        initQuality();
 
         initFragment();
 
@@ -100,15 +127,33 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
         onChangedVideoFrame();
 
-//        binding.tabLayout.setupWithViewPager(binding.viewPager);
-//        binding.tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(binding.viewPager));
-//        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
         binding.viewPager.setEnabled(false);
         binding.setHandler(this);
         binding.seekbarTime.setOnSeekBarChangeListener(this);
+        binding.pagerTab.setTextColor(getResources().getColor(R.color.white));
 
         renderVideo();
+    }
+
+    private void initQuality() {
+        if (listQuality == null) {
+            listQuality = new ArrayList<>();
+        }
+        listQuality.clear();
+
+        String name = myApplication.getQuality().getName();
+
+        listQuality.add(new MyQualityModel(MyApplication.PX_240P, false));
+        listQuality.add(new MyQualityModel(MyApplication.PX_360P, false));
+        listQuality.add(new MyQualityModel(MyApplication.PX_480P, false));
+        listQuality.add(new MyQualityModel(MyApplication.PX_720P, false));
+
+        for (MyQualityModel model : listQuality) {
+            if (model.getQuality().getName().equals(name)) {
+                model.setSelected(true);
+                break;
+            }
+        }
     }
 
     private void initTimer() {
@@ -165,13 +210,15 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         listMusicFramgent = new ListMusicFramgent(this, listMusic, myApplication);
         listImageFramesFramgent = new ListImageFramesFramgent(this, listFrame, myApplication);
         timerFramgent = new TimerFramgent(this, myApplication, listTimer);
+        qualityFramgent = new QualityFramgent(this, myApplication, listQuality);
     }
 
     private void initViewPager() {
         FragmentManager manager = getSupportFragmentManager();
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this, manager, listImageFramgent,
-                listEffectsFramgent, listMusicFramgent, listImageFramesFramgent, timerFramgent);
+                listEffectsFramgent, listMusicFramgent, listImageFramesFramgent, timerFramgent, qualityFramgent);
         binding.setAdapter(myPagerAdapter);
+        binding.viewPager.setOnPageChangeListener(this);
     }
 
     private void getListMusic() {
@@ -213,6 +260,10 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
+            if (!isLoadingSuccess) {
+                ShowLog.ShowLog(CreateVideoActivity.this, binding.getRoot(), getString(R.string.errror), false);
+                return false;
+            }
             listImage.remove(0);
             myApplication.setListIamge(listImage);
 
@@ -223,8 +274,10 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     }
 
     private void renderVideo() {
+        stopVideo();
         CreateVideoService.stopService(this);
         CreateVideoService.startService(this);
+        isLoadingSuccess = false;
         showMess();
     }
 
@@ -279,9 +332,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onSuccess(int numberOfFrames) {
         Log.e(TAG, "onSuccess Listener service: " + numberOfFrames);
-//        sizeMaxFrame = numberOfFrames;
         hideLoading();
-//        runOnUiThread(() -> initVideo());
+        isLoadingSuccess = true;
     }
 
     @Override
@@ -294,6 +346,14 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         Log.e(TAG, "onStartCreateVideo()");
         sizeMaxFrame = (listImage.size() - 2) * 30;
         runOnUiThread(() -> initVideo());
+    }
+
+    @Override
+    public void onFaild(Exception e) {
+        ShowLog.ShowLog(this, binding.getRoot(),
+                getString(R.string.errror) + " : " + e.getMessage(), false);
+        SelectImageActivity.startIntent(this);
+        finish();
     }
 
     @Override
@@ -324,6 +384,12 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         initMusic();
         playVideo();
         compareTimeSoundAndVideo();
+    }
+
+    @Override
+    public void onChangedQuality() {
+        Log.e(TAG, "onChangedQuality(): " + myApplication.getQuality().getName());
+        renderVideo();
     }
 
     @Override
@@ -545,7 +611,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
                 listMusicFramgent.openOrCloseAlert();
             }
         }
-        mediaPlayerTemp.release();
+        if (mediaPlayerTemp != null)
+            mediaPlayerTemp.release();
         mediaPlayerTemp = null;
     }
 
@@ -570,5 +637,39 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             mediaPlayer.release();
         }
         super.finish();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                break;
+            case 1:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.color_material_6));
+                break;
+            case 2:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.color_material_10));
+                break;
+            case 3:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.color_material_19));
+                break;
+            case 4:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.color_material_29));
+                break;
+            case 5:
+                binding.pagerTab.setBackgroundColor(getResources().getColor(R.color.color_material_1));
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

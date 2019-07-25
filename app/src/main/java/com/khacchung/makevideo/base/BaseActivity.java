@@ -2,9 +2,12 @@ package com.khacchung.makevideo.base;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -21,17 +24,21 @@ import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.activity.PermissionActivity;
 import com.khacchung.makevideo.handler.ChangedListener;
 import com.khacchung.makevideo.handler.MyCallBack;
+import com.khacchung.makevideo.model.MyVector;
 
 import java.io.File;
 
 public class BaseActivity extends AppCompatActivity implements ChangedListener {
 
     public static final int READ_WRITE_STORAGE = 52;
+    private static final String TAG = BaseActivity.class.getName();
     private ProgressDialog mProgressDialog;
     public static final String[] PERMISSION_LIST = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+
+    private ProgressDialog dialog;
 
     public boolean requestPermission(String permission) {
         boolean isGranted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
@@ -55,6 +62,9 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
                 }
             }
         }
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.wait));
     }
 
     protected void makeFullScreen() {
@@ -85,6 +95,30 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
         }
     }
 
+    protected MyVector getWidthAndHeight() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels + getNavigationBarHeight();
+        int width = displayMetrics.widthPixels;
+
+        return new MyVector(width, height);
+    }
+
+    private int getNavigationBarHeight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int usableHeight = metrics.heightPixels;
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            int realHeight = metrics.heightPixels;
+            if (realHeight > usableHeight)
+                return realHeight - usableHeight;
+            else
+                return 0;
+        }
+        return 0;
+    }
+
     protected void enableBackButton() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -107,6 +141,24 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
         }
     }
 
+    public void show() {
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+    }
+
+    protected void close() {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        close();
+    }
+
     public void showDialogDeleteFile(String pathFile, View view, MyCallBack callBack) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.alert));
@@ -125,6 +177,38 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    protected void intentShareImage(String path) {
+        MediaScannerConnection.scanFile(this, new String[]{path},
+
+                null, (path1, uri) -> {
+                    Intent shareIntent = new Intent(
+                            Intent.ACTION_SEND);
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    shareIntent
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    startActivity(Intent.createChooser(shareIntent,
+                            "Share Image..."));
+
+                });
+    }
+
+    protected void intentShareVideo(String path) {
+        MediaScannerConnection.scanFile(this, new String[]{path},
+
+                null, (path1, uri) -> {
+                    Intent shareIntent = new Intent(
+                            Intent.ACTION_SEND);
+                    shareIntent.setType("video/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    shareIntent
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    startActivity(Intent.createChooser(shareIntent,
+                            "Share Video..."));
+
+                });
     }
 
     @Override
@@ -158,6 +242,11 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
 
     @Override
     public void onChangedImage() {
+
+    }
+
+    @Override
+    public void onChangedQuality() {
 
     }
 }

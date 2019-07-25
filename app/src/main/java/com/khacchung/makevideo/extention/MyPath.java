@@ -1,6 +1,9 @@
 package com.khacchung.makevideo.extention;
 
 import android.content.Context;
+import android.os.Environment;
+
+import java.io.File;
 
 public class MyPath {
     public static final String NAME_VIDEO_TEMP = "temp_video.mp4";
@@ -11,11 +14,25 @@ public class MyPath {
     }
 
     public static String getPathSaveImage(Context context) {
-        return context.getFilesDir().getAbsolutePath() + "/list_image_edit/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                + "/list_image_edit/";
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return path;
+//        return context.getFilesDir().getAbsolutePath() + "/list_image_edit/";
     }
 
     public static String getPathSaveVideo(Context context) {
-        return context.getFilesDir().getAbsolutePath() + "/list_video_edit/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                + "/list_video_edit/";
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return path;
+//        return context.getFilesDir().getAbsolutePath() + "/list_video_edit/";
     }
 
     public static String getPathTempVideo(Context context) {

@@ -1,5 +1,6 @@
 package com.khacchung.makevideo.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,14 +22,14 @@ public class EditingToolsAdapter extends RecyclerView.Adapter<EditingToolsAdapte
     private List<ToolModel> mToolList = new ArrayList<>();
     private OnItemSelected mOnItemSelected;
 
-    public EditingToolsAdapter(OnItemSelected onItemSelected) {
+    public EditingToolsAdapter(OnItemSelected onItemSelected, Context context) {
         mOnItemSelected = onItemSelected;
-        mToolList.add(new ToolModel("Vẽ", R.drawable.ic_brush, ToolType.BRUSH));
-        mToolList.add(new ToolModel("Chữ", R.drawable.ic_text, ToolType.TEXT));
-        mToolList.add(new ToolModel("Xóa", R.drawable.ic_eraser, ToolType.ERASER));
-        mToolList.add(new ToolModel("Lọc", R.drawable.ic_photo_filter, ToolType.FILTER));
-        mToolList.add(new ToolModel("Biểu Tượng", R.drawable.ic_insert_emoticon, ToolType.EMOJI));
-        mToolList.add(new ToolModel("Nhãn", R.drawable.ic_sticker, ToolType.STICKER));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.brush), R.drawable.ic_brush, ToolType.BRUSH));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.label_text), R.drawable.ic_text, ToolType.TEXT));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.label_eraser), R.drawable.ic_eraser, ToolType.ERASER));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.label_filter), R.drawable.ic_photo_filter, ToolType.FILTER));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.label_emoji), R.drawable.ic_insert_emoticon, ToolType.EMOJI));
+        mToolList.add(new ToolModel(context.getResources().getString(R.string.label_sticker), R.drawable.ic_sticker, ToolType.STICKER));
     }
 
     public interface OnItemSelected {

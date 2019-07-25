@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".application.MyApplication"
@@ -20,18 +21,42 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.PlayVideoActivity" />
-        <activity android:name=".activity.CutSoundActivity" />
-        <activity android:name=".activity.CreatedFileActivity" />
-        <activity android:name=".activity.SaveVideoActivity" />
-        <activity android:name=".activity.CreateVideoActivity" />
-        <activity android:name=".activity.MoveIndexActivity" />
-        <activity android:name=".activity.SelectImageActivity" />
-        <activity android:name=".activity.ShowImageFullScreenActivity" />
-        <activity android:name=".activity.ListImageEditActivity" />
-        <activity android:name=".activity.PermissionActivity" />
-        <activity android:name=".activity.EditImageActivity" />
-        <activity android:name=".activity.HomeActivity">
+        <activity
+            android:name=".activity.PlayVideoActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".activity.CutSoundActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CreatedFileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SaveVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CreateVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MoveIndexActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SelectImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShowImageFullScreenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListImageEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PermissionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.EditImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

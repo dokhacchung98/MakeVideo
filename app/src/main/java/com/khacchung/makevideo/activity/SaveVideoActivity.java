@@ -33,20 +33,23 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     private String uriVideoFrames = "";
     private float timeLoad;
     private Handler handler = new Handler();
-    private Handler handlerThumbnail = new Handler();
 
+    private static final int STEP_0 = 0;//create thumbnail
     private static final int STEP_1 = 1;//create video
     private static final int STEP_2 = 2;//add frame
     private static final int STEP_3 = 3;//finish
 
     private boolean isCancel = false;
 
-    private int step;
+    private int step = -1;
     private boolean isRunEnd = false;
     private boolean isShow = false;
     private boolean isSuccess = false;
 
+    private boolean isShowLogRemove = false;
+
     private String nameVideo;
+    private AlertDialog.Builder builder;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, SaveVideoActivity.class);
@@ -65,18 +68,15 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         timeLoad = myApplication.getTimeLoad();
 
         nameVideo = "video"
-                + System.currentTimeMillis()
-                + ".mp4";
-
+                + System.currentTimeMillis();
+        initAlert();
         File file = new File(MyPath.getPathSaveVideo(this));
         if (!file.exists()) {
             file.mkdirs();
         }
 
         if (FFmpeg.getInstance(this).isSupported()) {
-            step = STEP_1;
             createThumbnail();
-            createVideo();
             handler.post(runnable);
         } else {
             ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.mobile_not_sup), false);
@@ -97,54 +97,59 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     }
 
     private void createThumbnail() {
-        handlerThumbnail.post(runnableThumbnail);
+        step = STEP_0;
+        try {
+            File file[] = new File(MyPath.getPathTemp(SaveVideoActivity.this)).listFiles();
+            if (file.length > 0) {
+                String cmd[] = CommandStringFFmpeg.copyThumbnail(SaveVideoActivity.this,
+                        file[0].getAbsolutePath(), nameVideo);
+                Log.e(TAG, "createThumbnail(): " + cmd.toString());
+
+                FFmpeg.getInstance(SaveVideoActivity.this).execute(cmd, new ExecuteBinaryResponseHandler() {
+                    @Override
+                    public void onSuccess(String message) {
+                        createVideo();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        super.onFailure(message);
+                        showLog();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            showLog();
+        }
     }
 
-    private Runnable runnableThumbnail = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                File file[] = new File(MyPath.getPathTemp(SaveVideoActivity.this)).listFiles();
-                if (file.length > 0) {
-                    String cmd[] = CommandStringFFmpeg.copyThumbnail(SaveVideoActivity.this,
-                            file[0].getAbsolutePath(), nameVideo);
-
-                    FFmpeg.getInstance(SaveVideoActivity.this).execute(cmd, new ExecuteBinaryResponseHandler() {
-                        @Override
-                        public void onSuccess(String message) {
-                            super.onSuccess(message);
-                        }
-
-                        @Override
-                        public void onFailure(String message) {
-                            super.onFailure(message);
-                            showLog();
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                handlerThumbnail.removeCallbacks(runnableThumbnail);
-            }
-        }
-    };
-
     private void createVideo() {
+        step = STEP_1;
         String pathSave;
         File file = new File(MyPath.getPathTempVideo(this));
         if (!file.exists()) {
             file.mkdirs();
         }
 
+        String pathSound = "";
+        if (myApplication.getPathMusic().isEmpty()) {
+            if (myApplication.getMyMusicModel() != null) {
+                pathSound = myApplication.getMyMusicModel().getPathMusic();
+            }
+        } else {
+            pathSound = myApplication.getPathMusic();
+        }
+
         pathSave = MyPath.getPathTempVideo(this) + MyPath.NAME_VIDEO_TEMP;
 
-        String cmd[] = CommandStringFFmpeg.getCommandCreadVideoFromImageAndMusic(this, myApplication.getMyMusicModel(), timeLoad, pathSave);
-        Log.e(TAG, cmd.toString());
+        String cmd[] = CommandStringFFmpeg.getCommandCreadVideoFromImageAndMusic(this,
+                pathSound, timeLoad, pathSave);
+        Log.e(TAG, "createVideo(): " + cmd.toString());
 
         try {
             FFmpeg.getInstance(this).execute(cmd, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
-                    step = STEP_2;
                     joinVideoFrame();
                 }
 
@@ -160,16 +165,18 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     }
 
     private void joinVideoFrame() {
+        step = STEP_2;
         String pathSave = MyPath.getPathSaveVideo(this)
-                + "video"
-                + System.currentTimeMillis() + ".mp4";
+                + nameVideo + ".mp4";
         String cmd[];
 
         if (uriVideoFrames.isEmpty()) {
             cmd = CommandStringFFmpeg.moveVideo(this, pathSave);
         } else {
-            cmd = CommandStringFFmpeg.addVideoFrame(this, myApplication.getFrameVideo(), pathSave);
+            cmd = CommandStringFFmpeg.addVideoFrame(this, myApplication.getFrameVideo(), pathSave, myApplication);
         }
+
+        Log.e(TAG, "joinVideoFrame(): " + cmd.toString());
 
         try {
             FFmpeg.getInstance(this).execute(cmd, new ExecuteBinaryResponseHandler() {
@@ -227,20 +234,23 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
 
     private void showVideo() {
         binding.btnCancel.setVisibility(View.GONE);
-        CreatedFileActivity.startIntentWithVideo(this, MyPath.getPathSaveVideo(this) + nameVideo);
-        finish();
+        if (!isShowLogRemove) {
+            CreatedFileActivity.startIntentWithVideo(this, MyPath.getPathSaveVideo(this) + nameVideo + ".mp4");
+            finish();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (step != STEP_3) {
-            showAlert();
-        }
+//        if (step != STEP_3) {
+//            showAlert();
+//        }
+        if (step == STEP_3)
+            super.onBackPressed();
     }
 
-    private void showAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void initAlert() {
+        builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.alert));
         builder.setMessage(getString(R.string.ques_cancel_video));
         builder.setCancelable(false);
@@ -250,7 +260,15 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
             finish();
         });
         builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+            isShowLogRemove = false;
+            if (step == STEP_3 && isSuccess) {
+                showVideo();
+            }
         });
+    }
+
+    private void showAlert() {
+        isShowLogRemove = true;
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -269,14 +287,18 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
 
     private void onCancelVideo() {
         isCancel = true;
-        handlerThumbnail.removeCallbacks(runnableThumbnail);
+        process = 100;
+        step = STEP_3;
+        isSuccess = false;
         handler.removeCallbacks(runnable);
         if (step == STEP_3) {
-            String pathVideo = MyPath.getPathSaveVideo(this) + nameVideo;
+            String pathVideo = MyPath.getPathSaveVideo(this) + nameVideo + ".mp4";
             File file = new File(pathVideo);
             if (file.exists()) {
                 file.delete();
             }
         }
+        ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.stop_video), true);
+        finish();
     }
 }

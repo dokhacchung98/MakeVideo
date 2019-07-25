@@ -76,7 +76,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
     private TextView mTxtCurrentTool;
     private Typeface mWonderFont;
     private RecyclerView mRvTools, mRvFilters;
-    private EditingToolsAdapter mEditingToolsAdapter = new EditingToolsAdapter(this);
+    private EditingToolsAdapter mEditingToolsAdapter;
     private FilterViewAdapter mFilterViewAdapter = new FilterViewAdapter(this);
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
@@ -88,10 +88,10 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
     private Bitmap tmpBitmap;
     private int indexImage = -1;
 
-    public static void startInternt(Context context, String uri, View view, boolean isReplace) {
+    public static void startInternt(BaseActivity context, String uri, View view, boolean isReplace) {
         Intent intent = new Intent(context, EditImageActivity.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, view, "imgFrom");
+                makeSceneTransitionAnimation(context, view, "imgFrom");
         intent.putExtra(URI_IMAGE, uri);
         intent.putExtra(EXTRA_REPLACE, isReplace);
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE/*, options.toBundle()*/);
@@ -113,6 +113,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
         makeFullScreen();
         enableBackButton();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_image);
+        mEditingToolsAdapter = new EditingToolsAdapter(this, EditImageActivity.this);
 
         Intent intent = getIntent();
         if (intent != null) {

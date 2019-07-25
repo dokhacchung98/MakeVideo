@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.fragment.CreatedImageFragment;
 import com.khacchung.makevideo.fragment.CreatedVideoFragment;
 
@@ -55,9 +56,9 @@ public class MyPagerCreatedAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Ảnh Đã Tạo";
+                return activity.getString(R.string.image_created);
             case 1:
-                return "Video Đã Tạo";
+                return activity.getString(R.string.video_created);
         }
         return "";
     }

@@ -63,7 +63,6 @@ public class ListImageFramesFramgent extends Fragment implements MySelectedItemL
             listFramesAdapter.getCurrentTheme();
             listFramesAdapter.notifyDataSetChanged();
 
-            //todo: broadcast event changed the frame
             baseActivity.onChangedVideoFrame();
         }
     }

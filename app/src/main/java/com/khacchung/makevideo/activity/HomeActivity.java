@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +30,10 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
     private static final String TAG = HomeActivity.class.getName();
     private MyApplication myApplication;
 
+    private Handler handler = new Handler();
+
+    private boolean isPress = true;
+
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, HomeActivity.class);
         activity.startActivity(intent);
@@ -42,40 +47,85 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         binding.setHandler(this);
 
-        myApplication = MyApplication.getInstance();
-        myApplication.initData();
-
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             File file = new File(MyPath.getPathFrame(this));
             if (!file.exists()) {
                 file.mkdirs();
             }
             if (file.listFiles().length == 0) {
-                showLoading("Đang lưu trữ dữ liệu, vui lòng đợi...");
+                showLoading(getString(R.string.saving_first));
                 copyImage();
+            }
+        }
+
+        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            File file = new File(MyPath.getPathSound(this));
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (file.listFiles().length == 0) {
+                showLoading(getString(R.string.saving_second));
+                copySound();
             }
         }
 
         initMyApplication();
     }
 
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            isPress = true;
+            handler.removeCallbacks(this);
+        }
+    };
+
     private void initMyApplication() {
+        myApplication = MyApplication.getInstance();
         myApplication.initData();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnEditImage:
-                ListImageEditActivity.startIntent(this);
-                break;
-            case R.id.btnCreateVideo:
-                SelectImageActivity.startIntent(this);
-                break;
-            case R.id.btnCreatedFile:
-                CreatedFileActivity.startIntent(this);
-                break;
+        if (isPress) {
+            switch (view.getId()) {
+                case R.id.btnEditImage:
+                    ListImageEditActivity.startIntent(this);
+                    break;
+                case R.id.btnCreateVideo:
+                    initMyApplication();
+                    SelectImageActivity.startIntent(this);
+                    break;
+                case R.id.btnCreatedFile:
+                    CreatedFileActivity.startIntent(this);
+                    break;
+                case R.id.btnOut:
+                    finish();
+                case R.id.btnFeedBack:
+                    feedback();
+                    break;
+                case R.id.btnShare:
+                    shareApp();
+                    break;
+                case R.id.btnMore:
+                    seeMore();
+                    break;
+            }
+            isPress = false;
+            handler.postDelayed(runnable, 100);
         }
+    }
+
+    private void seeMore() {
+        //todo: see more
+    }
+
+    private void shareApp() {
+        //todo: share application
+    }
+
+    private void feedback() {
+        //todo: feedback
     }
 
     @Override
@@ -91,7 +141,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         } catch (IOException e) {
             Log.e(TAG, "Failed to get asset file list.", e);
             hideLoading();
-            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             return;
         }
 
@@ -111,20 +161,12 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
             } catch (IOException e) {
                 Log.e(TAG, "Failed to copy asset file: " + filename, e);
                 hideLoading();
-                ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+                ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
                 return;
             }
         }
-        File file = new File(MyPath.getPathFrame(this));
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        if (file.listFiles().length == 0) {
-            copySound();
-        } else {
-            hideLoading();
-            ShowLog.ShowLog(this, binding.getRoot(), "Lưu trữ thành công", true);
-        }
+        hideLoading();
+        ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.save_success), true);
     }
 
     private void copySound() {
@@ -135,7 +177,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         } catch (IOException e) {
             Log.e(TAG, "Failed to get asset file list.", e);
             hideLoading();
-            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             return;
         }
 
@@ -155,12 +197,12 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
             } catch (IOException e) {
                 Log.e(TAG, "Failed to copy asset file: " + filename, e);
                 hideLoading();
-                ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+                ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
                 return;
             }
         }
         hideLoading();
-        ShowLog.ShowLog(this, binding.getRoot(), "Lưu trữ thành công", true);
+        ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.save_success), true);
     }
 
     private void copyFile(InputStream in, OutputStream out) throws IOException {

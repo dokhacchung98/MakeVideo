@@ -10,4 +10,6 @@ public interface ChangedListener {
     void onChangedTimeFrame();
 
     void onChangedImage();
+
+    void onChangedQuality();
 }

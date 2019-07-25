@@ -22,7 +22,7 @@
             android:id="@+id/txtTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/change_list_music"
             android:textColor="@color/colorBlack"
@@ -47,7 +47,7 @@
             android:background="@color/design_default_color_error"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
-            android:text="Bản nhạc này có độ dài ngắn hơn video hiện tại!"
+            android:text="@string/string_shorter"
             android:textColor="@color/colorWhite"
             android:visibility="gone" />
     </RelativeLayout>

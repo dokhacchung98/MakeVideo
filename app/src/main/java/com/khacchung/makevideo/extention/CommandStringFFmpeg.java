@@ -3,19 +3,18 @@ package com.khacchung.makevideo.extention;
 import android.content.Context;
 
 import com.khacchung.makevideo.application.MyApplication;
-import com.khacchung.makevideo.model.MyMusicModel;
 
 import java.io.File;
 
 public class CommandStringFFmpeg {
-    public static String[] getCommandCreadVideoFromImageAndMusic(Context context, MyMusicModel myMusic, float timeLoad, String pathSaveVideo) {
+    public static String[] getCommandCreadVideoFromImageAndMusic(Context context, String myMusic, float timeLoad, String pathSaveVideo) {
         String pathFolderImage = MyPath.getPathTemp(context);
         File file = new File(pathFolderImage);
         if (!file.exists()) {
             file.mkdirs();
         }
-        if (myMusic != null) {
-            File file1 = new File(myMusic.getPathMusic());
+        if (!myMusic.isEmpty()) {
+            File file1 = new File(myMusic);
             String tmp[] = new String[]{
                     "-y",
                     "-framerate",
@@ -53,7 +52,7 @@ public class CommandStringFFmpeg {
         }
     }
 
-    public static String[] addVideoFrame(Context context, String pathVideoFrames, String pathSaveVideo) {
+    public static String[] addVideoFrame(Context context, String pathVideoFrames, String pathSaveVideo, MyApplication myApplication) {
         String pathVideo = MyPath.getPathTempVideo(context) + MyPath.NAME_VIDEO_TEMP;
         File file = new File(pathVideo);
         if (!file.exists()) {
@@ -67,9 +66,9 @@ public class CommandStringFFmpeg {
                 pathVideoFrames,
                 "-filter_complex",
                 "[1]scale="
-                        + MyApplication.VIDEO_WIDTH
+                        + myApplication.getQuality().getWidth()
                         + ":"
-                        + MyApplication.VIDEO_HEIGHT
+                        + myApplication.getQuality().getHeight()
                         + ",geq=r='r(X,Y)':a='1*alpha(X,Y)'[s1];[0][s1]overlay=0:0",
                 pathSaveVideo
         };
@@ -125,8 +124,4 @@ public class CommandStringFFmpeg {
                 fileSound.getAbsolutePath()
         };
     }
-
-    //ffmpeg -framerate 30 -i list_image_temp\img%04d.jpg -r 25 -pix_fmt yuv420p ouuu.mp4 --none sound
-    //ffmpeg -framerate 15/5 -i list_image_temp\img%04d.jpg -i a.wav -r 25 -t total_time -c:v libx264 -preset ultrafast -pix_fmt yuv420p ouuu.mp4 --with sound
-    //ffmpeg -i Images\sound.mp3 -ss 29 -t 19 -acodec copy out.mp3 -cut sound
 }

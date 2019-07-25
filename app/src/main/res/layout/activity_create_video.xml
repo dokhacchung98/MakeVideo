@@ -18,11 +18,55 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fr_around"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ln_bottom"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorBlack">
+
+                <FrameLayout
+                    android:id="@+id/fr_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200sdp"
+                    android:layout_gravity="center"
+                    android:onClick="@{(v)->handler.onClick(v)}">
+
+                    <ImageView
+                        android:id="@+id/imgThumbnail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
+                    <ImageView
+                        android:id="@+id/imgFrame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
+                    <FrameLayout
+                        android:id="@+id/fr_play"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#43929292">
+
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_play_button_opacity" />
+                    </FrameLayout>
+                </FrameLayout>
+            </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/ln_bottom"
@@ -30,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:id="@+id/txt_current_time"
@@ -56,67 +101,27 @@
                     android:textSize="12sp" />
             </RelativeLayout>
 
-            <FrameLayout
-                android:id="@+id/fr_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/ln_bottom"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="8dp"
-                android:onClick="@{(v)->handler.onClick(v)}">
-
-                <ImageView
-                    android:id="@+id/imgThumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY" />
-
-                <ImageView
-                    android:id="@+id/imgFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY" />
-
-                <FrameLayout
-                    android:id="@+id/fr_play"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#43929292">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_play_button_opacity" />
-                </FrameLayout>
-            </FrameLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!--<com.google.android.material.tabs.TabLayout-->
-            <!--android:id="@+id/tab_layout"-->
-            <!--style="@style/CustomTabLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:tabMode="scrollable" />-->
-
-            <androidx.viewpager.widget.ViewPager
+            <com.khacchung.makevideo.base.ViewPagerDisableScroll
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:adapter="@{adapter}">
 
                 <androidx.viewpager.widget.PagerTabStrip
-                    style="@style/CustomTabLayout"
+                    android:id="@+id/pager_tab"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </androidx.viewpager.widget.ViewPager>
+                    android:layout_height="@dimen/_35sdp"
+                    android:background="@color/colorPrimaryLight"
+                    android:foregroundGravity="center"
+                    android:scrollIndicators="bottom" />
+            </com.khacchung.makevideo.base.ViewPagerDisableScroll>
         </LinearLayout>
     </LinearLayout>
 </layout>

@@ -4,16 +4,18 @@ import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityPlayVideoBinding;
 
-public class PlayVideoActivity extends BaseActivity implements OnPreparedListener {
+import java.io.File;
+
+public class PlayVideoActivity extends BaseActivity {
     private ActivityPlayVideoBinding binding;
     private String pathVideo;
     private static final String PATH_VIDEO = "path_video";
@@ -25,8 +27,23 @@ public class PlayVideoActivity extends BaseActivity implements OnPreparedListene
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_share) {
+            intentShareVideo(pathVideo);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         enableBackButton();
+        setTitleToolbar(getString(R.string.watching));
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_video);
 
@@ -35,7 +52,7 @@ public class PlayVideoActivity extends BaseActivity implements OnPreparedListene
             pathVideo = intent.getStringExtra(PATH_VIDEO);
         }
         if (pathVideo == null || pathVideo.isEmpty()) {
-            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             finish();
         }
 
@@ -43,12 +60,14 @@ public class PlayVideoActivity extends BaseActivity implements OnPreparedListene
     }
 
     private void initVideo() {
-        binding.videoView.setOnPreparedListener(this);
-        binding.videoView.setVideoURI(Uri.parse(pathVideo));
-    }
-
-    @Override
-    public void onPrepared() {
-        binding.videoView.start();
+        File file = new File(pathVideo);
+        if (file.exists()) {
+            binding.fullscreenVideoView
+                    .videoFile(file)
+                    .enableAutoStart();
+        } else {
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
+            finish();
+        }
     }
 }

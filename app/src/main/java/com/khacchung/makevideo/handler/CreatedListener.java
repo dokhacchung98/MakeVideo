@@ -6,4 +6,6 @@ public interface CreatedListener {
     void onUpdate(int size);
 
     void onStartCreateVideo();
+
+    void onFaild(Exception e);
 }

@@ -36,6 +36,13 @@ public class BindingAdapter {
         }
     }
 
+    @androidx.databinding.BindingAdapter({"app:image_uri"})
+    public static void loadImageUriNotScale(ImageView imageView, String uri) {
+        if (uri != null && !uri.isEmpty()) {
+            Picasso.get().load(new File(uri)).into(imageView);
+        }
+    }
+
     @androidx.databinding.BindingAdapter("app:layoutGridManager")
     public static void setLayoutManager(RecyclerView recyclerView, GridLayoutManager gridLayoutManager) {
         if (gridLayoutManager != null) {

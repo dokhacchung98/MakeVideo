@@ -69,7 +69,6 @@ public class ListMusicFramgent extends Fragment implements MySelectedItemListene
                 listMusic.get(index).setSelected(true);
             }
             listMusicAdapter.notifyDataSetChanged();
-            //todo: broadcast event changed the music
 
             baseActivity.onChangedMusic();
         } else {

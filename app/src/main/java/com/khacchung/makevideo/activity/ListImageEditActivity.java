@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.FolderAdapter;
 import com.khacchung.makevideo.adapter.ListImageAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.databinding.ActivityListImageEditBinding;
+import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyFolderModel;
 import com.khacchung.makevideo.model.MyImageModel;
@@ -65,6 +67,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
         Cursor query = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{"_data", "_id", "bucket_display_name", "bucket_id", "datetaken"},
                 null, null, "bucket_display_name DESC");
+        String tmp = MyPath.getPathSaveImage(this);
         if (query.moveToFirst()) {
             int columnIndex = query.getColumnIndex("bucket_display_name");
             int columnIndex3 = query.getColumnIndex("datetaken");
@@ -94,7 +97,11 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                                 t++;
                             }
                         }
-                        listFolder.add(new MyFolderModel(nameFolder, path, false, t));
+
+                        Log.e("TAGTAGTAG", tmp + " -------- " + path);
+                        if (!tmp.contains(path)) {
+                            listFolder.add(new MyFolderModel(nameFolder, path, false, t));
+                        }
                     }
                 }
             } while (query.moveToNext());
@@ -139,6 +146,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
         if (code == CodeSelectedItem.CODE_SELECT) {
             MyImageModel model = (MyImageModel) obj;
             EditImageActivity.startInterntWithIndex(this, model.getPathImage(), p, binding.getRoot(), false);
+            show();
         }
     }
 

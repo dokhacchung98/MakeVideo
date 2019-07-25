@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="8dp"
                 android:paddingBottom="8dp"
-                android:src="@drawable/ic_folder" />
+                android:src="@{myModel.selected ? @drawable/ic_folder_select : @drawable/ic_folder}" />
 
             <TextView
                 android:layout_width="24dp"

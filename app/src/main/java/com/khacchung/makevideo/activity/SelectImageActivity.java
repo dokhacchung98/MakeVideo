@@ -21,6 +21,7 @@ import com.khacchung.makevideo.application.MyApplication;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivitySelectImageBinding;
+import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyFolderModel;
@@ -52,7 +53,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         enableBackButton();
-        setTitleToolbar("Danh sách ảnh");
+        setTitleToolbar(getString(R.string.list_image2));
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_image);
 
         myApplication = MyApplication.getInstance();
@@ -97,6 +98,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                 new String[]{"_data", "_id", "bucket_display_name", "bucket_id", "datetaken"},
                 null, null, "bucket_display_name DESC");
         assert query != null;
+        String tmp = MyPath.getPathSaveImage(this);
         if (query.moveToFirst()) {
             int columnIndex = query.getColumnIndex("bucket_display_name");
             int columnIndex3 = query.getColumnIndex("datetaken");
@@ -126,7 +128,10 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                                 t++;
                             }
                         }
-                        listFolder.add(new MyFolderModel(nameFolder, path, false, t));
+
+                        if (!tmp.contains(path)) {
+                            listFolder.add(new MyFolderModel(nameFolder, path, false, t));
+                        }
                     }
                 }
             } while (query.moveToNext());
@@ -245,7 +250,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
                 MoveIndexActivity.startIntent(this);
                 finish();
             } else {
-                ShowLog.ShowLog(this, binding.getRoot(), "Bạn phải có ít nhất 3 ảnh trong danh sách", false);
+                ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.need_3_image), false);
             }
             return true;
         }

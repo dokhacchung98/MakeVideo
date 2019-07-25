@@ -4,9 +4,9 @@ import androidx.databinding.DataBindingUtil;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.khacchung.makevideo.R;
@@ -22,7 +22,6 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
     private static final String MODEL_IMAGE = "model_image";
     private MyImageModel myImageModel;
     private boolean isShow = false;
-    private int startIndex = 0;
 
     public static void startIntent(Activity activity, MyImageModel model) {
         Intent intent = new Intent(activity, ShowImageFullScreenActivity.class);
@@ -41,7 +40,7 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
         myImageModel = (MyImageModel) intent.getSerializableExtra(MODEL_IMAGE);
 
         if (myImageModel == null) {
-            ShowLog.ShowLog(this, binding.getRoot(), "Có lỗi, vui lòng thử lại", false);
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             finish();
         }
         binding.setModel(myImageModel);
@@ -56,9 +55,13 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
             case R.id.txtBack:
                 finish();
                 break;
-            case R.id.txtEdit:
+            case R.id.btnEdit:
                 EditImageActivity.startInternt(this, myImageModel.getPathImage(), binding.getRoot(), false);
+                show();
                 finish();
+                break;
+            case R.id.btnShare:
+                intentShareImage(myImageModel.getPathImage());
                 break;
         }
     }

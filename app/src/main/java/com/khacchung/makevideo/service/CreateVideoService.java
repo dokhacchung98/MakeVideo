@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.IBinder;
 
 import com.khacchung.makevideo.application.MyApplication;
@@ -32,8 +31,6 @@ public class CreateVideoService extends Service implements MyCallBack {
 
     private boolean isStart = false;
 
-    private Handler handler;
-
     public static void startService(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoService.class);
         activity.startService(intent);
@@ -50,9 +47,6 @@ public class CreateVideoService extends Service implements MyCallBack {
     public CreateVideoService() {
         myApplication = MyApplication.getInstance();
         listImage = myApplication.getListIamge();
-
-//        handler = new Handler();
-//        handler.post(() -> createImages());
 
         MyAsync myAsync = new MyAsync(myApplication.getListener(), myApplication, this);
         myAsync.execute();
@@ -80,37 +74,37 @@ public class CreateVideoService extends Service implements MyCallBack {
         while (i < listImage.size() - 1) {
             if (i == 0) {
                 Bitmap firstBitmap = ScalingUtilities.checkBitmap(listImage.get(i).getPathImage());
-                Bitmap temp = ScalingUtilities.scaleCenterCrop(firstBitmap, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-                newFirstBmp = ScalingUtilities.ConvetrSameSize(firstBitmap, temp, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+                Bitmap temp = ScalingUtilities.scaleCenterCrop(firstBitmap, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+                newFirstBmp = ScalingUtilities.ConvetrSameSize(firstBitmap, temp, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
                 temp.recycle();
                 firstBitmap.recycle();
                 System.gc();
             } else {
                 if (newSecondBmp2 == null || newSecondBmp2.isRecycled()) {
                     Bitmap firstBitmap2 = ScalingUtilities.checkBitmap((listImage.get(i)).getPathImage());
-                    Bitmap temp2 = ScalingUtilities.scaleCenterCrop(firstBitmap2, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-                    newSecondBmp2 = ScalingUtilities.ConvetrSameSize(firstBitmap2, temp2, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+                    Bitmap temp2 = ScalingUtilities.scaleCenterCrop(firstBitmap2, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+                    newSecondBmp2 = ScalingUtilities.ConvetrSameSize(firstBitmap2, temp2, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
                     temp2.recycle();
                     firstBitmap2.recycle();
                 }
                 newFirstBmp = newSecondBmp2;
             }
             Bitmap secondBitmap = ScalingUtilities.checkBitmap((listImage.get(i + 1)).getPathImage());
-            Bitmap temp22 = ScalingUtilities.scaleCenterCrop(secondBitmap, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-            newSecondBmp2 = ScalingUtilities.ConvetrSameSize(secondBitmap, temp22, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+            Bitmap temp22 = ScalingUtilities.scaleCenterCrop(secondBitmap, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+            newSecondBmp2 = ScalingUtilities.ConvetrSameSize(secondBitmap, temp22, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
             temp22.recycle();
             secondBitmap.recycle();
             System.gc();
             FinalMaskBitmap.reintRect();
             FinalMaskBitmap.EFFECT effect = myApplication.getSeletedTheme().getTheme().get(i % myApplication.getSeletedTheme().getTheme().size());
             for (int j = 0; ((float) j) < FinalMaskBitmap.ANIMATED_FRAME; j++) {
-                Bitmap bmp = Bitmap.createBitmap(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, Bitmap.Config.ARGB_8888);
+                Bitmap bmp = Bitmap.createBitmap(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), Bitmap.Config.ARGB_8888);
                 Paint paint = new Paint(1);
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
                 Canvas canvas = new Canvas(bmp);
                 canvas.drawBitmap(newFirstBmp, 0.0f, 0.0f, null);
-                canvas.drawBitmap(effect.getMask(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, j), 0.0f, 0.0f, paint);
-                Bitmap bitmap3 = Bitmap.createBitmap(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, Bitmap.Config.ARGB_8888);
+                canvas.drawBitmap(effect.getMask(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), j), 0.0f, 0.0f, paint);
+                Bitmap bitmap3 = Bitmap.createBitmap(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas2 = new Canvas(bitmap3);
                 canvas2.drawBitmap(newSecondBmp2, 0.0f, 0.0f, null);
                 canvas2.drawBitmap(bmp, 0.0f, 0.0f, new Paint());
@@ -124,10 +118,10 @@ public class CreateVideoService extends Service implements MyCallBack {
                     FileOutputStream fileOutputStream = new FileOutputStream(file2);
                     bitmap3.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (IOException e2) {
-                    e2.printStackTrace();
+                    myApplication.getListener().onFaild(e);
+                    this.stopSelf();
                 }
                 indexTempRun++;
                 myApplication.getListener().onUpdate(indexTempRun);
@@ -206,37 +200,37 @@ public class CreateVideoService extends Service implements MyCallBack {
             while (i < listImage.size() - 1) {
                 if (i == 0) {
                     Bitmap firstBitmap = ScalingUtilities.checkBitmap(listImage.get(i).getPathImage());
-                    Bitmap temp = ScalingUtilities.scaleCenterCrop(firstBitmap, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-                    newFirstBmp = ScalingUtilities.ConvetrSameSize(firstBitmap, temp, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+                    Bitmap temp = ScalingUtilities.scaleCenterCrop(firstBitmap, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+                    newFirstBmp = ScalingUtilities.ConvetrSameSize(firstBitmap, temp, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
                     temp.recycle();
                     firstBitmap.recycle();
                     System.gc();
                 } else {
                     if (newSecondBmp2 == null || newSecondBmp2.isRecycled()) {
                         Bitmap firstBitmap2 = ScalingUtilities.checkBitmap((listImage.get(i)).getPathImage());
-                        Bitmap temp2 = ScalingUtilities.scaleCenterCrop(firstBitmap2, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-                        newSecondBmp2 = ScalingUtilities.ConvetrSameSize(firstBitmap2, temp2, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+                        Bitmap temp2 = ScalingUtilities.scaleCenterCrop(firstBitmap2, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+                        newSecondBmp2 = ScalingUtilities.ConvetrSameSize(firstBitmap2, temp2, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
                         temp2.recycle();
                         firstBitmap2.recycle();
                     }
                     newFirstBmp = newSecondBmp2;
                 }
                 Bitmap secondBitmap = ScalingUtilities.checkBitmap((listImage.get(i + 1)).getPathImage());
-                Bitmap temp22 = ScalingUtilities.scaleCenterCrop(secondBitmap, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT);
-                newSecondBmp2 = ScalingUtilities.ConvetrSameSize(secondBitmap, temp22, MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, 1.0f, 0.0f);
+                Bitmap temp22 = ScalingUtilities.scaleCenterCrop(secondBitmap, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight());
+                newSecondBmp2 = ScalingUtilities.ConvetrSameSize(secondBitmap, temp22, myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), 1.0f, 0.0f);
                 temp22.recycle();
                 secondBitmap.recycle();
                 System.gc();
                 FinalMaskBitmap.reintRect();
                 FinalMaskBitmap.EFFECT effect = myApplication.getSeletedTheme().getTheme().get(i % myApplication.getSeletedTheme().getTheme().size());
                 for (int j = 0; ((float) j) < FinalMaskBitmap.ANIMATED_FRAME; j++) {
-                    Bitmap bmp = Bitmap.createBitmap(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, Bitmap.Config.ARGB_8888);
+                    Bitmap bmp = Bitmap.createBitmap(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), Bitmap.Config.ARGB_8888);
                     Paint paint = new Paint(1);
                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
                     Canvas canvas = new Canvas(bmp);
                     canvas.drawBitmap(newFirstBmp, 0.0f, 0.0f, null);
-                    canvas.drawBitmap(effect.getMask(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, j), 0.0f, 0.0f, paint);
-                    Bitmap bitmap3 = Bitmap.createBitmap(MyApplication.VIDEO_WIDTH, MyApplication.VIDEO_HEIGHT, Bitmap.Config.ARGB_8888);
+                    canvas.drawBitmap(effect.getMask(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), j), 0.0f, 0.0f, paint);
+                    Bitmap bitmap3 = Bitmap.createBitmap(myApplication.getQuality().getWidth(), myApplication.getQuality().getHeight(), Bitmap.Config.ARGB_8888);
                     Canvas canvas2 = new Canvas(bitmap3);
                     canvas2.drawBitmap(newSecondBmp2, 0.0f, 0.0f, null);
                     canvas2.drawBitmap(bmp, 0.0f, 0.0f, new Paint());

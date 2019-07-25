@@ -73,6 +73,7 @@ public class ListImageFramgent extends Fragment implements MySelectedItemListene
             MyImageModel model = (MyImageModel) obj;
             myApplication.setEnd(false);
             EditImageActivity.startInterntWithIndex(baseActivity, model.getPathImage(), p, binding.getRoot(), true);
+            baseActivity.show();
         } else if (code == CodeSelectedItem.CODE_ADD) {
             SelectImageActivity.startIntent(baseActivity);
             baseActivity.finish();

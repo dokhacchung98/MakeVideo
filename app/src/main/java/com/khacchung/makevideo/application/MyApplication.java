@@ -7,6 +7,7 @@ import android.content.Context;
 import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.handler.CreatedListener;
 import com.khacchung.makevideo.mask.THEMES;
+import com.khacchung.makevideo.model.EnumQuality;
 import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.model.MyMusicModel;
 import com.khacchung.makevideo.service.CreateVideoService;
@@ -15,13 +16,18 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class MyApplication extends Application {
-    public static final int VIDEO_WIDTH = 720;
-    public static final int VIDEO_HEIGHT = 480;
+    public static final String PX_240P = "240p";
+    public static final String PX_360P = "360p";
+    public static final String PX_480P = "480p";
+    public static final String PX_720P = "720p";
+
     private static MyApplication instance;
 
     private boolean isAlertSound = false;
 
     private String pathSaveTempImage;
+
+    private EnumQuality quality = EnumQuality.QUALITY_480P;
 
     private float timeLoad = 1f;
     private String frameVideo = "";
@@ -47,6 +53,7 @@ public class MyApplication extends Application {
         pathMusic = "";
         isAlertSound = false;
         listIamge.clear();
+        quality = EnumQuality.QUALITY_480P;
     }
 
     @Override
@@ -106,6 +113,14 @@ public class MyApplication extends Application {
 
     public MyMusicModel getMyMusicModel() {
         return myMusicModel;
+    }
+
+    public EnumQuality getQuality() {
+        return quality;
+    }
+
+    public void setQuality(EnumQuality quality) {
+        this.quality = quality;
     }
 
     public void setMyMusicModel(MyMusicModel myMusicModel) {
