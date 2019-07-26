@@ -66,7 +66,7 @@ public class ListFramesAdapter extends RecyclerView.Adapter<ListFramesAdapter.My
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view) {;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ListFramesAdapter extends RecyclerView.Adapter<ListFramesAdapter.My
             itemImageBinding.executePendingBindings();
             MyFrameModel tmp = (MyFrameModel) obj;
             if (tmp.getPathFrame().isEmpty()) {
-                itemImageBinding.imgThumbnail.setImageResource(R.drawable.ic_none);
+                itemImageBinding.imgThumbnail.setImageResource(0);
             }
             if (tmp.getPathFrame().equals(currentFrame)) {
                 itemImageBinding.imgChecked.setVisibility(View.VISIBLE);

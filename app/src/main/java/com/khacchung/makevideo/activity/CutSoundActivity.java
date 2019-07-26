@@ -75,7 +75,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
         binding.sbRange.setIndicatorTextDecimalFormat("0");
         binding.sbRange.setOnRangeChangedListener(this);
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim_loading);
         binding.imgThumbnail.setAnimation(animation);
         animation.start();
 
@@ -121,14 +121,6 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
             mediaPlayer.pause();
             binding.imgPlay.setImageResource(R.drawable.ic_play_button_1);
         }
-    }
-
-    private void restartSound() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        }
-        initSound();
     }
 
     private void stopSound() {

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.khacchung.makevideo.BR;
 import com.khacchung.makevideo.R;
-import com.khacchung.makevideo.activity.EditImageActivity;
 import com.khacchung.makevideo.databinding.RowImageHorizontalBinding;
 import com.khacchung.makevideo.handler.MyClickHandler;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
@@ -42,7 +41,7 @@ public class ListImageHorizontalAdapter extends RecyclerView.Adapter<ListImageHo
                 parent,
                 false
         );
-        return new MyViewHolder(itemImageBinding);
+        return new MyViewHolder(itemImageBinding, context);
     }
 
     @Override
@@ -77,10 +76,13 @@ public class ListImageHorizontalAdapter extends RecyclerView.Adapter<ListImageHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private RowImageHorizontalBinding itemImageBinding;
+        private Context context;
 
-        MyViewHolder(RowImageHorizontalBinding itemImageBinding) {
+        MyViewHolder(RowImageHorizontalBinding itemImageBinding,
+                     Context context) {
             super(itemImageBinding.getRoot());
             this.itemImageBinding = itemImageBinding;
+            this.context = context;
         }
 
         public void bind(Object obj) {
@@ -91,8 +93,10 @@ public class ListImageHorizontalAdapter extends RecyclerView.Adapter<ListImageHo
             if (model.getPathImage() == null || model.getPathImage().isEmpty()) {
                 itemImageBinding.imgThumbnail.setImageResource(R.drawable.add_img);
                 itemImageBinding.btnEdit.setVisibility(View.GONE);
+                itemImageBinding.cardAround.getLayoutParams().width = (int) context.getResources().getDimension(R.dimen._72sdp);
             } else {
                 itemImageBinding.btnEdit.setVisibility(View.VISIBLE);
+                itemImageBinding.cardAround.getLayoutParams().width = (int) context.getResources().getDimension(R.dimen._186sdp);
             }
         }
     }

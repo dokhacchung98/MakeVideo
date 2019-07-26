@@ -33,7 +33,9 @@
             android:id="@+id/rv_list_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_124sdp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             app:adapter="@{my_adapter}"
             app:layoutLayoutManager="@{layout_manager}" />
     </LinearLayout>

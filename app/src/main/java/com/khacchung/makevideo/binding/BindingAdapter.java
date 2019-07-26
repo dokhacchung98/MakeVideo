@@ -1,6 +1,8 @@
 package com.khacchung.makevideo.binding;
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.GridLayoutManager;

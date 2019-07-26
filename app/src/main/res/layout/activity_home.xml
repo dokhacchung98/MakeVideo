@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout>
 
     <data>
 
@@ -8,16 +8,36 @@
             type="com.khacchung.makevideo.handler.MyClickHandler" />
     </data>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_home"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgNameApp"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:src="@drawable/img_name_app" />
+
+            <ImageView
+                android:id="@+id/imgThumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_24sdp"
+                android:src="@drawable/img_thumbnail"
+                android:transitionName="@string/view_share_tran"
+                tools:ignore="UnusedAttribute" />
 
         </LinearLayout>
 

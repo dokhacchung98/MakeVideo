@@ -69,8 +69,6 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                 copySound();
             }
         }
-
-        initMyApplication();
     }
 
     private Runnable runnable = new Runnable() {
@@ -81,11 +79,6 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         }
     };
 
-    private void initMyApplication() {
-        myApplication = MyApplication.getInstance();
-        myApplication.initData();
-    }
-
     @Override
     public void onClick(View view) {
         if (isPress) {
@@ -94,7 +87,6 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                     ListImageEditActivity.startIntent(this);
                     break;
                 case R.id.btnCreateVideo:
-                    initMyApplication();
                     SelectImageActivity.startIntent(this);
                     break;
                 case R.id.btnCreatedFile:

@@ -65,6 +65,21 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_sb_play_circle" />
                     </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fr_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#43929292"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/img_loading"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/loading" />
+                    </FrameLayout>
                 </FrameLayout>
             </FrameLayout>
 

@@ -1,5 +1,6 @@
 package com.khacchung.makevideo.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -275,7 +276,24 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
         if (!myApplication.isEnd()) {
             CreateVideoActivity.startIntent(this);
             finish();
+        } else {
+            if (listImageSelected.size() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getString(R.string.alert));
+                builder.setMessage(getString(R.string.alert_exit_select));
+                builder.setCancelable(false);
+                builder.setPositiveButton(getString(R.string.yes), (dialogInterface, i) -> {
+                    myApplication.initData();
+                    finish();
+                });
+                builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } else {
+                finish();
+            }
         }
-        super.onBackPressed();
     }
 }

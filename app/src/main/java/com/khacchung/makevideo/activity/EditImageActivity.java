@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,21 +89,17 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
 
     public static void startInternt(BaseActivity context, String uri, View view, boolean isReplace) {
         Intent intent = new Intent(context, EditImageActivity.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(context, view, "imgFrom");
         intent.putExtra(URI_IMAGE, uri);
         intent.putExtra(EXTRA_REPLACE, isReplace);
-        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE/*, options.toBundle()*/);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE);
     }
 
     public static void startInterntWithIndex(Context context, String uri, int index, View view, boolean isReplace) {
         Intent intent = new Intent(context, EditImageActivity.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, view, "imgFrom");
         intent.putExtra(URI_IMAGE, uri);
         intent.putExtra(EXTRA_REPLACE, isReplace);
         intent.putExtra(INDEX_IMAGE, index);
-        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE/*, options.toBundle()*/);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_EDIT_IMAGE);
     }
 
     @Override

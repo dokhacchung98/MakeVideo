@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
@@ -73,6 +75,18 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private boolean isLoadingSuccess = false;
 
+    private boolean isStart = true;
+
+    private int currentFrame = 0;
+    private int sizeMaxFrame = 0;
+
+    private int currentTime = 0;
+    private int totalTime = 0;
+
+    private boolean isPlaying = true;
+    private boolean isPauseVideo = true;
+    private boolean isLoading = true;
+
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoActivity.class);
         activity.startActivity(intent);
@@ -100,6 +114,10 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
                 myW,
                 myH
         ));
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim);
+        binding.imgLoading.setAnimation(animation);
+        animation.start();
 
         myApplication = MyApplication.getInstance();
         myApplication.registerListener(this);
@@ -298,14 +316,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         compareTimeSoundAndVideo();
     }
 
-    private int currentFrame = 0;
-    private int sizeMaxFrame = 0;
-
-    private int currentTime = 0;
-    private int totalTime = 0;
-
-    private boolean isPlaying = true;
-
     private void setImage() {
         String path = MyPath.getPathTemp(this) + String.format("img" + "%04d.jpg", currentFrame);
         currentFrame++;
@@ -333,18 +343,24 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     public void onSuccess(int numberOfFrames) {
         Log.e(TAG, "onSuccess Listener service: " + numberOfFrames);
         hideLoading();
+        closeLoading();
         isLoadingSuccess = true;
     }
 
     @Override
     public void onUpdate(int size) {
         binding.seekbarTime.setSecondaryProgress(size);
+        if (!isStart && !isPlaying && size - currentPause >= 20 && !isPauseVideo) {
+            runOnUiThread(() -> playVideo());
+            closeLoading();
+        }
     }
 
     @Override
     public void onStartCreateVideo() {
         Log.e(TAG, "onStartCreateVideo()");
         sizeMaxFrame = (listImage.size() - 2) * 30;
+        isStart = false;
         runOnUiThread(() -> initVideo());
     }
 
@@ -408,6 +424,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private void pauseVideo() {
         binding.frPlay.setVisibility(View.VISIBLE);
+        binding.frLoading.setVisibility(View.GONE);
         isPlaying = false;
         handler.removeCallbacks(runnable);
         pauseMusic();
@@ -415,6 +432,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private void playVideo() {
         hideLoading();
+        isPauseVideo = false;
         binding.frPlay.setVisibility(View.GONE);
         isPlaying = true;
         playMusic();
@@ -432,10 +450,11 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.fr_video) {
-            if (isPlaying) {
-                pauseVideo();
-            } else {
+            if (!isPlaying) {
                 playVideo();
+            } else {
+                isPauseVideo = true;
+                pauseVideo();
             }
         }
     }
@@ -444,6 +463,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     public void onClickWithData(View view, Object value) {
 
     }
+
+    private int currentPause = 0;
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -456,6 +477,13 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
             int tmp = (int) (((float) currentFrame / sizeMaxFrame) * totalTime * 1000);
             seekMusic(tmp);
             setImage();
+        }
+        if (!fromUser) {
+            if (progress >= seekBar.getSecondaryProgress()) {
+                pauseVideo();
+                currentPause = progress;
+                showLoading();
+            }
         }
     }
 
@@ -524,6 +552,12 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     private void restartMusic() {
         if (mediaPlayer != null) {
             mediaPlayer.seekTo(0);
+
+            if (isPlaying && !mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            } else if (isPlaying && mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
         }
     }
 
@@ -671,5 +705,18 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    private void showLoading() {
+        isLoading = true;
+        runOnUiThread(() -> {
+            binding.frLoading.setVisibility(View.VISIBLE);
+            binding.frPlay.setVisibility(View.GONE);
+        });
+    }
+
+    private void closeLoading() {
+        isLoading = false;
+        runOnUiThread(() -> binding.frLoading.setVisibility(View.GONE));
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MakeVideo</string>
+    <string name="app_name">Tạo Video</string>
     <string name="denied_permision">Bạn cần cấp quyền trước khi thao tác</string>
     <string name="back">Quay lại</string>
     <string name="error_intent">Có lỗi bất ngờ xảy ra, vui lòng thử lại</string>
@@ -77,4 +77,6 @@
     <string name="wait">Vui lòng chờ trong giây lát</string>
     <string name="string_shorter">Bản nhạc này có độ dài ngắn hơn video hiện tại!</string>
     <string name="alert_exit">Bạn có muốn thoát ứng dụng?</string>
+    <string name="alert_exit_select">Bạn có muốn hủy bỏ thao tác khởi tạo video, các dữ liệu sẽ bị hủy?</string>
+    <string name="view_share_tran">share_element_thumbail</string>
 </resources>
