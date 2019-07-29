@@ -450,7 +450,9 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
             }
         }
         if (!isSave) {
-            ListImageEditActivity.startIntent(this);
+            if (!isReplace) {
+                ListImageEditActivity.startIntent(this);
+            }
         }
 
         super.finish();
