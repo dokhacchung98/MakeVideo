@@ -115,7 +115,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
                 myH
         ));
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim_loading);
         binding.imgLoading.setAnimation(animation);
         animation.start();
 
@@ -149,6 +149,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.setHandler(this);
         binding.seekbarTime.setOnSeekBarChangeListener(this);
         binding.pagerTab.setTextColor(getResources().getColor(R.color.white));
+        binding.pagerTab.setTabIndicatorColorResource(R.color.white);
 
         renderVideo();
     }

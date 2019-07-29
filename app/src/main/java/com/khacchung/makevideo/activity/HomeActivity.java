@@ -5,12 +5,19 @@ import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.application.MyApplication;
@@ -34,6 +41,9 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
     private Handler handler = new Handler();
 
     private boolean isPress = true;
+
+    private Animation animThumbnail;
+    private Animation animAppName;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, HomeActivity.class);
@@ -69,6 +79,15 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                 copySound();
             }
         }
+
+        animThumbnail = AnimationUtils.loadAnimation(this, R.anim.anim_thumbnail);
+        animAppName = AnimationUtils.loadAnimation(this, R.anim.anim_app_name);
+
+        binding.imgThumbnail.setAnimation(animThumbnail);
+        binding.imgNameApp.setAnimation(animAppName);
+
+        animAppName.start();
+        animThumbnail.start();
     }
 
     private Runnable runnable = new Runnable() {
@@ -93,7 +112,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                     CreatedFileActivity.startIntent(this);
                     break;
                 case R.id.btnOut:
-                    showDialogAlertExit();
+                    onBackPressed();
                 case R.id.btnFeedBack:
                     feedback();
                     break;
@@ -105,20 +124,20 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                     break;
             }
             isPress = false;
-            handler.postDelayed(runnable, 100);
+            handler.postDelayed(runnable, 400);
         }
     }
 
     private void seeMore() {
-        //todo: see more
+        ShowDialogInfo();
     }
 
     private void shareApp() {
-        //todo: share application
+        intentShareApp(binding.getRoot());
     }
 
     private void feedback() {
-        //todo: feedback
+        ShowDialogSendFeedback();
     }
 
     @Override
@@ -219,5 +238,52 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDialogAlertExit();
+    }
+
+    private void ShowDialogInfo() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_info);
+        dialog.setCancelable(true);
+        Button btnOk = dialog.findViewById(R.id.btnOk);
+        btnOk.setOnClickListener((v) -> dialog.cancel());
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        window.setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void ShowDialogSendFeedback() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_send_feedback);
+        dialog.setCancelable(false);
+        EditText txtTitle = dialog.findViewById(R.id.edt_title);
+        EditText txtContent = dialog.findViewById(R.id.edt_content);
+        Button btnSend = dialog.findViewById(R.id.btnOk);
+        btnSend.setOnClickListener((v) -> {
+            String title = txtTitle.getText().toString().trim();
+            String content = txtContent.getText().toString().trim();
+            if (title.isEmpty()) {
+                txtTitle.setError(getString(R.string.error_input));
+                return;
+            }
+            if (content.isEmpty()) {
+                txtContent.setError(getString(R.string.error_input));
+                return;
+            }
+            intentSendEmail(title, content);
+            dialog.cancel();
+        });
+
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener((v) -> dialog.cancel());
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        window.setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
     }
 }

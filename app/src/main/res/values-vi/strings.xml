@@ -62,6 +62,7 @@
     <string name="saving_first">Đang lưu trữ ảnh, vui lòng đợi...</string>
     <string name="saving_second">Đang lưu trữ âm thanh, vui lòng đợi...</string>
     <string name="share_via">Chia sẻ qua: </string>
+    <string name="email_via">Gửi mail gua</string>
     <string name="list_image">*  Danh Sách Ảnh</string>
     <string name="list_image2">Danh Sách Ảnh</string>
     <string name="list_effect">* Danh Sách Hiệu Ứng</string>
@@ -79,4 +80,16 @@
     <string name="alert_exit">Bạn có muốn thoát ứng dụng?</string>
     <string name="alert_exit_select">Bạn có muốn hủy bỏ thao tác khởi tạo video, các dữ liệu sẽ bị hủy?</string>
     <string name="view_share_tran">share_element_thumbail</string>
+    <string name="version">Phiên bản: v.1.0</string>
+    <string name="release">Phát hành bởi: Công ty Iken Việt Nam</string>
+    <string name="email_send">ochung3@gmail.com</string>
+    <string name="copyright_2019">copyright © - 2019</string>
+    <string name="ok">OK</string>
+    <string name="send">Gửi</string>
+    <string name="content">Nội dung</string>
+    <string name="title">Tiêu đề</string>
+    <string name="error_input">Vui lòng nhập nội dung!</string>
+    <string name="share_app">\nChia sẻ đến mọi người\n\n</string>
+    <string name="feedback">Phản Hồi</string>
+    <string name="feedback_content">Nếu bạn có bất kỳ câu hỏi hoặc vấn đề nào liên quan đến ứng dụng, vui lòng gửi cho chúng tôi biết phản hồi của bạn!</string>
 </resources>

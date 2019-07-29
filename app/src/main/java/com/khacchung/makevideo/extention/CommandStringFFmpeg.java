@@ -3,6 +3,7 @@ package com.khacchung.makevideo.extention;
 import android.content.Context;
 
 import com.khacchung.makevideo.application.MyApplication;
+import com.khacchung.makevideo.model.MyVector;
 
 import java.io.File;
 
@@ -122,6 +123,24 @@ public class CommandStringFFmpeg {
                 "-acodec",
                 "copy",
                 fileSound.getAbsolutePath()
+        };
+    }
+
+    public static String[] resizeImage(Context context, String pathImage, MyVector size) {
+        File file = new File(pathImage);
+        String pathSave = MyPath.getPathTempResizeImage(context);
+        File file1 = new File(pathSave);
+        if (!file1.exists()) {
+            file1.mkdirs();
+        }
+        pathSave += MyPath.NAME_IMAGE_RESIZE;
+        return new String[]{
+                "-y",
+                "-i",
+                file.getAbsolutePath(),
+                "-vf",
+                "scale=" + size.getWidth() + ":" + size.getHeight(),
+                pathSave
         };
     }
 }

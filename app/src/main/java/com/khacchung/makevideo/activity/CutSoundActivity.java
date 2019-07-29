@@ -75,7 +75,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
         binding.sbRange.setIndicatorTextDecimalFormat("0");
         binding.sbRange.setOnRangeChangedListener(this);
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim_loading);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotation_anim);
         binding.imgThumbnail.setAnimation(animation);
         animation.start();
 

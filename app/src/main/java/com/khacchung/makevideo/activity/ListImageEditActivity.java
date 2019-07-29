@@ -7,24 +7,35 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.adapter.FolderAdapter;
 import com.khacchung.makevideo.adapter.ListImageAdapter;
 import com.khacchung.makevideo.base.BaseActivity;
+import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityListImageEditBinding;
+import com.khacchung.makevideo.extention.CommandStringFFmpeg;
 import com.khacchung.makevideo.extention.MyPath;
 import com.khacchung.makevideo.handler.MySelectedItemListener;
 import com.khacchung.makevideo.model.MyFolderModel;
 import com.khacchung.makevideo.model.MyImageModel;
+import com.khacchung.makevideo.model.MyVector;
 import com.khacchung.makevideo.util.CodeSelectedItem;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
+import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
+import nl.bravobit.ffmpeg.FFmpeg;
+
 public class ListImageEditActivity extends BaseActivity implements MySelectedItemListener {
+    private static final String TAG = ListImageEditActivity.class.getName();
     private ActivityListImageEditBinding binding;
     private ArrayList<MyFolderModel> listFolder;
     private ArrayList<MyImageModel> listImage;
@@ -143,8 +154,46 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
     public void selectedItem(Object obj, int code, int p) {
         if (code == CodeSelectedItem.CODE_SELECT) {
             MyImageModel model = (MyImageModel) obj;
-            EditImageActivity.startInterntWithIndex(this, model.getPathImage(), p, binding.getRoot(), false);
             show();
+            File file = new File(model.getPathImage());
+            long lengthbmp = file.length();
+            Log.e(TAG, "selectedItem() size image slected: " + lengthbmp);
+            if (lengthbmp >= 5000000) {
+                resizeImage(model, p);
+            } else
+                EditImageActivity.startInterntWithIndex(this, model.getPathImage(), p, binding.getRoot(), false);
+
+        }
+    }
+
+    private void resizeImage(MyImageModel model, int p) {
+        try {
+            File file = new File(model.getPathImage());
+            if (file.length() > 0) {
+                String cmd[] = CommandStringFFmpeg.resizeImage(this,
+                        model.getPathImage(), new MyVector(4000, -1));
+                Log.e(TAG, "resizeImage(): " + cmd.toString());
+
+                FFmpeg.getInstance(this).execute(cmd, new ExecuteBinaryResponseHandler() {
+                    @Override
+                    public void onSuccess(String message) {
+                        String pathSave = MyPath.getPathTempResizeImage(ListImageEditActivity.this)
+                                + MyPath.NAME_IMAGE_RESIZE;
+                        EditImageActivity.startInterntWithIndex(ListImageEditActivity.this,
+                                pathSave, p, binding.getRoot(), false);
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        super.onFailure(message);
+                        ShowLog.ShowLog(ListImageEditActivity.this, binding.getRoot(), getString(R.string.errror), false);
+                        close();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
+            close();
         }
     }
 
@@ -162,3 +211,4 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
         }
     }
 }
+//2282108, 1425164, 3370154, 9730697

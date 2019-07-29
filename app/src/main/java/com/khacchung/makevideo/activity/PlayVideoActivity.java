@@ -64,7 +64,9 @@ public class PlayVideoActivity extends BaseActivity {
         if (file.exists()) {
             binding.fullscreenVideoView
                     .videoFile(file)
-                    .enableAutoStart();
+                    .enableAutoStart()
+                    .addSeekBackwardButton()
+                    .addSeekForwardButton();
         } else {
             ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             finish();

@@ -62,6 +62,7 @@
     <string name="saving_first">Saving photos, please wait...</string>
     <string name="saving_second">Saving sounds, please wait...</string>
     <string name="share_via">Share via: </string>
+    <string name="email_via">Email via...</string>
     <string name="list_image">*  List Images</string>
     <string name="list_image2">List Images</string>
     <string name="list_effect">* List Effects</string>
@@ -79,4 +80,16 @@
     <string name="alert_exit">Do you want exit application?</string>
     <string name="alert_exit_select">Do you want to cancel the video initialization operation, the data will be canceled?</string>
     <string name="view_share_tran">share_element_thumbail</string>
+    <string name="version">Versions: v.1.0</string>
+    <string name="release">Released by: Iken Company</string>
+    <string name="email_send">ochung3@gmail.com</string>
+    <string name="copyright_2019">copyright © - 2019</string>
+    <string name="ok">OK</string>
+    <string name="send">Send</string>
+    <string name="content">Content</string>
+    <string name="title">Title</string>
+    <string name="error_input">Please enter content!</string>
+    <string name="share_app">\nLet me recommend you this application\n\n</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_content">If you have any questions or problems related to the application, please send us your feedback!</string>
 </resources>

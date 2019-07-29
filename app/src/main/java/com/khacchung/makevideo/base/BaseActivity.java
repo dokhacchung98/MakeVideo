@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -18,8 +19,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 
+import com.khacchung.makevideo.BuildConfig;
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.activity.PermissionActivity;
 import com.khacchung.makevideo.handler.ChangedListener;
@@ -65,6 +68,7 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
 
         dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.wait));
+        dialog.setCancelable(false);
     }
 
     protected void makeFullScreen() {
@@ -209,6 +213,30 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
                             "Share Video..."));
 
                 });
+    }
+
+    protected void intentSendEmail(String title, String content) {
+        ShareCompat.IntentBuilder.from(this)
+                .setType("message/rfc822")
+                .addEmailTo(getString(R.string.email_send))
+                .setSubject(title)
+                .setText(content)
+                .setChooserTitle(getString(R.string.email_via))
+                .startChooser();
+    }
+
+    protected void intentShareApp(View view) {
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+            String shareMessage = getString(R.string.share_app);
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            startActivity(Intent.createChooser(shareIntent, "Choose one"));
+        } catch (Exception e) {
+            ShowLog.ShowLog(this, view, getString(R.string.errror), false);
+        }
     }
 
     @Override

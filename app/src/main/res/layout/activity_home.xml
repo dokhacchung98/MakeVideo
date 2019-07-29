@@ -9,7 +9,6 @@
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_home"
@@ -35,9 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/_24sdp"
-                android:src="@drawable/img_thumbnail"
-                android:transitionName="@string/view_share_tran"
-                tools:ignore="UnusedAttribute" />
+                android:src="@drawable/img_thumbnail"/>
 
         </LinearLayout>
 

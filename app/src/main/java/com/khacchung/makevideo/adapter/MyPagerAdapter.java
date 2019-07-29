@@ -20,6 +20,7 @@ import com.khacchung.makevideo.fragment.ListImageFramgent;
 import com.khacchung.makevideo.fragment.ListMusicFramgent;
 import com.khacchung.makevideo.fragment.QualityFramgent;
 import com.khacchung.makevideo.fragment.TimerFramgent;
+import com.khacchung.makevideo.util.CenteredImageSpan;
 
 public class MyPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -112,7 +113,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             myDrawable[position].setBounds(0, 0,
                     myDrawable[position].getIntrinsicWidth() - 10, myDrawable[position].getIntrinsicHeight() - 10);
-            ImageSpan span = new ImageSpan(myDrawable[position], ImageSpan.ALIGN_BASELINE);
+            CenteredImageSpan span = new CenteredImageSpan(myDrawable[position], ImageSpan.ALIGN_BASELINE);
             sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 

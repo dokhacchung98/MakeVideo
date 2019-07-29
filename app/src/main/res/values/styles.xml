@@ -20,7 +20,7 @@
 
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
-        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabIndicatorHeight">6dp</item>
         <item name="tabBackground">@drawable/tab_color_seleted</item>
         <item name="tabIconTint">@color/colorWhite</item>
         <item name="tabTextColor">#81FFFFFF</item>

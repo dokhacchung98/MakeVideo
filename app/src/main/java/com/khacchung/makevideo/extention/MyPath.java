@@ -8,6 +8,7 @@ import java.io.File;
 public class MyPath {
     public static final String NAME_VIDEO_TEMP = "temp_video.mp4";
     public static final String NAME_SOUND_TEMP = "temp_sound.mp3";
+    public static final String NAME_IMAGE_RESIZE = "resize_tmp.jpg";
 
     public static String getPathTemp(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/list_image_temp/";
@@ -21,7 +22,6 @@ public class MyPath {
             file.mkdirs();
         }
         return path;
-//        return context.getFilesDir().getAbsolutePath() + "/list_image_edit/";
     }
 
     public static String getPathSaveVideo(Context context) {
@@ -32,7 +32,6 @@ public class MyPath {
             file.mkdirs();
         }
         return path;
-//        return context.getFilesDir().getAbsolutePath() + "/list_video_edit/";
     }
 
     public static String getPathTempVideo(Context context) {
@@ -53,5 +52,9 @@ public class MyPath {
 
     public static String getPathTempSound(Context context) {
         return context.getFilesDir().getAbsolutePath() + "/list_temp_sound/";
+    }
+
+    public static String getPathTempResizeImage(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/image_resize_temp/";
     }
 }
