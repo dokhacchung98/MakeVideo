@@ -3,6 +3,7 @@ package com.khacchung.makevideo.base;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -230,13 +231,19 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-            String shareMessage = getString(R.string.share_app);
+            String shareMessage = getString(R.string.app_name);
             shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
             startActivity(Intent.createChooser(shareIntent, "Choose one"));
         } catch (Exception e) {
             ShowLog.ShowLog(this, view, getString(R.string.errror), false);
         }
+    }
+
+    protected PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
+        PackageManager manager = this.getPackageManager();
+        PackageInfo info = manager.getPackageInfo(this.getPackageName(), PackageManager.GET_ACTIVITIES);
+        return info;
     }
 
     @Override

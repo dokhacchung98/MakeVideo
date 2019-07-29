@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -27,7 +25,6 @@ import com.khacchung.makevideo.model.MyImageModel;
 import com.khacchung.makevideo.model.MyVector;
 import com.khacchung.makevideo.util.CodeSelectedItem;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -160,9 +157,10 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
             Log.e(TAG, "selectedItem() size image slected: " + lengthbmp);
             if (lengthbmp >= 5000000) {
                 resizeImage(model, p);
-            } else
+            } else {
                 EditImageActivity.startInterntWithIndex(this, model.getPathImage(), p, binding.getRoot(), false);
-
+                finish();
+            }
         }
     }
 
@@ -181,6 +179,7 @@ public class ListImageEditActivity extends BaseActivity implements MySelectedIte
                                 + MyPath.NAME_IMAGE_RESIZE;
                         EditImageActivity.startInterntWithIndex(ListImageEditActivity.this,
                                 pathSave, p, binding.getRoot(), false);
+                        finish();
                     }
 
                     @Override

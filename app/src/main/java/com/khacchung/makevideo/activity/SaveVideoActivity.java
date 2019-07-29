@@ -215,6 +215,7 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
             }
             if (process >= 97 && step != STEP_3) {
                 process = 97;
+                binding.txtWait.setText(getString(R.string.please_wait2));
                 handler.removeCallbacks(this);
                 isRunEnd = true;
             } else if (process >= 97) {

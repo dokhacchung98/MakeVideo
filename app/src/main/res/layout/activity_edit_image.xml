@@ -100,6 +100,7 @@
             tools:listitem="@layout/row_filter_view" />
 
         <RelativeLayout
+            android:id="@+id/rv_top"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#31000000"

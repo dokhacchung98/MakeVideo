@@ -84,7 +84,6 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
     private boolean isReplace = false;
     private String newPathImage = "";
     private boolean isSave = false;
-    private Bitmap tmpBitmap;
     private int indexImage = -1;
 
     public static void startInternt(BaseActivity context, String uri, View view, boolean isReplace) {
@@ -310,8 +309,7 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
                         mPhotoEditor.clearAllViews();
                         Uri uri = data.getData();
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        tmpBitmap = bitmap.copy(bitmap.getConfig(), true);
-                        mPhotoEditorView.getSource().setImageBitmap(tmpBitmap);
+                        mPhotoEditorView.getSource().setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -380,7 +378,6 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
                 textEditorDialogFragment.setOnTextEditorListener((inputText, colorCode) -> {
                     final TextStyleBuilder styleBuilder = new TextStyleBuilder();
                     styleBuilder.withTextColor(colorCode);
-
                     mPhotoEditor.addText(inputText, styleBuilder);
                     mTxtCurrentTool.setText(R.string.label_text);
                 });
@@ -448,7 +445,14 @@ public class EditImageActivity extends BaseActivity implements EditingToolsAdapt
             intent.putExtra(PATH_IMAGE_NEW, newPathImage);
             intent.putExtra(INDEX_IMAGE, indexImage);
             setResult(Activity.RESULT_OK, intent);
+            if (!isReplace) {
+                CreatedFileActivity.startIntent(this);
+            }
         }
+        if (!isSave) {
+            ListImageEditActivity.startIntent(this);
+        }
+
         super.finish();
     }
 }

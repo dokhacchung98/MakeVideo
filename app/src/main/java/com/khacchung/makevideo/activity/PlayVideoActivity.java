@@ -4,6 +4,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.base.BaseActivity;
 import com.khacchung.makevideo.base.ShowLog;
 import com.khacchung.makevideo.databinding.ActivityPlayVideoBinding;
+import com.universalvideoview.UniversalMediaController;
+import com.universalvideoview.UniversalVideoView;
 
 import java.io.File;
 
@@ -19,11 +22,16 @@ public class PlayVideoActivity extends BaseActivity {
     private ActivityPlayVideoBinding binding;
     private String pathVideo;
     private static final String PATH_VIDEO = "path_video";
+    private UniversalVideoView mVideoView;
+    private UniversalMediaController mMediaController;
 
     public static void startIntent(Activity activity, String pathVideo) {
         Intent intent = new Intent(activity, PlayVideoActivity.class);
         intent.putExtra(PATH_VIDEO, pathVideo);
         activity.startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(pathVideo));
+//        intent.setDataAndType(Uri.parse(pathVideo), "video/*");
+//        activity.startActivity(intent);
     }
 
     @Override
@@ -62,11 +70,11 @@ public class PlayVideoActivity extends BaseActivity {
     private void initVideo() {
         File file = new File(pathVideo);
         if (file.exists()) {
-            binding.fullscreenVideoView
-                    .videoFile(file)
-                    .enableAutoStart()
-                    .addSeekBackwardButton()
-                    .addSeekForwardButton();
+            mVideoView = binding.videoView;
+            mMediaController = binding.mediaController;
+            mVideoView.setMediaController(mMediaController);
+            mVideoView.setVideoURI(Uri.parse(file.getAbsolutePath()));
+            mVideoView.start();
         } else {
             ShowLog.ShowLog(this, binding.getRoot(), getString(R.string.errror), false);
             finish();

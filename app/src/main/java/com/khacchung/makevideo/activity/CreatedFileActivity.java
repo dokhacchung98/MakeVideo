@@ -31,6 +31,7 @@ public class CreatedFileActivity extends BaseActivity {
     private MyPagerCreatedAdapter myPagerCreatedAdapter;
     private ArrayList<String> listImages = new ArrayList<>();
     private ArrayList<MyVideoModel> listVideos = new ArrayList<>();
+    private String pathVideo = null;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreatedFileActivity.class);
@@ -54,6 +55,16 @@ public class CreatedFileActivity extends BaseActivity {
         initData();
         initUI();
 
+        if (pathVideo != null && !pathVideo.isEmpty()) {
+            PlayVideoActivity.startIntent(CreatedFileActivity.this, pathVideo);
+        }
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         if (pathVideo != null && !pathVideo.isEmpty()) {
             binding.vpCreated.setCurrentItem(1);
             PlayVideoActivity.startIntent(this, pathVideo);

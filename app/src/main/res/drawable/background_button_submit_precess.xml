@@ -7,5 +7,5 @@
         android:top="@dimen/_8sdp" />
     <stroke
         android:width="2dp"
-        android:color="@color/white" />
+        android:color="@color/colorWhite" />
 </shape>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data></data>
 
@@ -9,9 +9,26 @@
         android:background="@color/dark"
         android:gravity="center">
 
-        <bg.devlabs.fullscreenvideoview.FullscreenVideoView
-            android:id="@+id/fullscreenVideoView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <FrameLayout
+            android:id="@+id/video_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/_200sdp"
+            android:background="@android:color/black">
+
+            <com.universalvideoview.UniversalVideoView
+                android:id="@+id/videoView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                app:uvv_autoRotation="true"
+                app:uvv_fitXY="false" />
+
+            <com.universalvideoview.UniversalMediaController
+                android:id="@+id/media_controller"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                app:uvv_scalable="true" />
+
+        </FrameLayout>
     </RelativeLayout>
 </layout>

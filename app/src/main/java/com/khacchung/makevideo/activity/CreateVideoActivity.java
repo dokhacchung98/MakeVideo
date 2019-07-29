@@ -148,8 +148,8 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.viewPager.setEnabled(false);
         binding.setHandler(this);
         binding.seekbarTime.setOnSeekBarChangeListener(this);
-        binding.pagerTab.setTextColor(getResources().getColor(R.color.white));
-        binding.pagerTab.setTabIndicatorColorResource(R.color.white);
+        binding.pagerTab.setTextColor(getResources().getColor(R.color.colorWhite));
+        binding.pagerTab.setTabIndicatorColorResource(R.color.colorWhite);
 
         renderVideo();
     }

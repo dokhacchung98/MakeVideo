@@ -30,7 +30,8 @@
     <string name="second_4">4 second</string>
     <string name="second_5">5 second</string>
     <string name="cancel">Cancel</string>
-    <string name="please_wait">Videos are being saved, please wait a moment!</string>
+    <string name="please_wait">Video is being created, please wait a moment!</string>
+    <string name="please_wait2">Video is being Saved...</string>
     <string name="move_image">Click and hold the image to change position</string>
     <string name="save_video">Save video</string>
     <string name="add_image">Add More Images</string>
@@ -80,7 +81,7 @@
     <string name="alert_exit">Do you want exit application?</string>
     <string name="alert_exit_select">Do you want to cancel the video initialization operation, the data will be canceled?</string>
     <string name="view_share_tran">share_element_thumbail</string>
-    <string name="version">Versions: v.1.0</string>
+    <string name="version">Versions: </string>
     <string name="release">Released by: Iken Company</string>
     <string name="email_send">ochung3@gmail.com</string>
     <string name="copyright_2019">copyright © - 2019</string>

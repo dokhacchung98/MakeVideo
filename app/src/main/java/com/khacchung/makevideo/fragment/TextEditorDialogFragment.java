@@ -76,15 +76,16 @@ public class TextEditorDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_add_text_dialog, container, false);
+        mAddTextEditText = binding.addTextEditText;
+        mAddTextDoneTextView = binding.addTextDoneTv;
+        mColorCode = ContextCompat.getColor(getContext(), R.color.color_material_1);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAddTextEditText = binding.addTextEditText;
         mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        mAddTextDoneTextView = binding.addTextDoneTv;
 
         RecyclerView addTextColorPickerRecyclerView = binding.addTextColorPickerRecyclerView;
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -96,10 +97,7 @@ public class TextEditorDialogFragment extends DialogFragment {
             mAddTextEditText.setTextColor(colorCode);
         });
         addTextColorPickerRecyclerView.setAdapter(colorPickerAdapter);
-        mAddTextEditText.setText(getArguments().getString(EXTRA_INPUT_TEXT));
-        mColorCode = getArguments().getInt(EXTRA_COLOR_CODE);
         mAddTextEditText.setTextColor(mColorCode);
-        mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mAddTextDoneTextView.setOnClickListener(view1 -> {
             mInputMethodManager.hideSoftInputFromWindow(view1.getWindowToken(), 0);

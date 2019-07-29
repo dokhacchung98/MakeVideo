@@ -7,6 +7,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.khacchung.makevideo.R;
 import com.khacchung.makevideo.application.MyApplication;
@@ -113,6 +115,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
                     break;
                 case R.id.btnOut:
                     onBackPressed();
+                    break;
                 case R.id.btnFeedBack:
                     feedback();
                     break;
@@ -249,6 +252,12 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_info);
         dialog.setCancelable(true);
+        TextView textView = dialog.findViewById(R.id.txtVersion);
+        try {
+            textView.setText(getString(R.string.version) + getPackageInfo().versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         Button btnOk = dialog.findViewById(R.id.btnOk);
         btnOk.setOnClickListener((v) -> dialog.cancel());
         dialog.show();
@@ -261,16 +270,19 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_send_feedback);
         dialog.setCancelable(false);
-        EditText txtTitle = dialog.findViewById(R.id.edt_title);
         EditText txtContent = dialog.findViewById(R.id.edt_content);
         Button btnSend = dialog.findViewById(R.id.btnOk);
         btnSend.setOnClickListener((v) -> {
-            String title = txtTitle.getText().toString().trim();
-            String content = txtContent.getText().toString().trim();
-            if (title.isEmpty()) {
-                txtTitle.setError(getString(R.string.error_input));
-                return;
+            String title = "";
+            try {
+                title = getString(R.string.feedback) + "-"
+                        + getString(R.string.app_name) + "-Version:"
+                        + getPackageInfo().versionName;
+                Log.e(TAG, "ShowDialogSendFeedback() title: " + title);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
+            String content = txtContent.getText().toString().trim();
             if (content.isEmpty()) {
                 txtContent.setError(getString(R.string.error_input));
                 return;
