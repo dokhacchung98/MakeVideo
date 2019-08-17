@@ -3,6 +3,7 @@ package com.khacchung.makevideo.activity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -49,6 +50,11 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
     private boolean isSave = false;
     private int totalSecond;
 
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     public static final void startIntent(Activity activity, String uriSound) {
         Intent intent = new Intent(activity, CutSoundActivity.class);
         intent.putExtra(PATH_SOUND, uriSound);
@@ -61,7 +67,7 @@ public class CutSoundActivity extends BaseActivity implements OnRangeChangedList
         enableBackButton();
         setTitle(getString(R.string.cut_sound));
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cut_sound);
-
+        realtimePermission(PERMISSION_LIST);
         Intent intent = getIntent();
         pathSound = intent.getStringExtra(PATH_SOUND);
         if (pathSound == null || pathSound.isEmpty()) {

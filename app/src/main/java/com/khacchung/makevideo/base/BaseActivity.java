@@ -1,12 +1,10 @@
 package com.khacchung.makevideo.base;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -25,7 +23,6 @@ import androidx.core.content.ContextCompat;
 
 import com.khacchung.makevideo.BuildConfig;
 import com.khacchung.makevideo.R;
-import com.khacchung.makevideo.activity.PermissionActivity;
 import com.khacchung.makevideo.handler.ChangedListener;
 import com.khacchung.makevideo.handler.MyCallBack;
 import com.khacchung.makevideo.model.MyVector;
@@ -37,10 +34,6 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
     public static final int READ_WRITE_STORAGE = 52;
     private static final String TAG = BaseActivity.class.getName();
     private ProgressDialog mProgressDialog;
-    public static final String[] PERMISSION_LIST = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     private ProgressDialog dialog;
 
@@ -55,17 +48,20 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
         return isGranted;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void realtimePermission(String[] listPermission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (String permisson : PERMISSION_LIST) {
+            for (String permisson : listPermission) {
                 if (checkSelfPermission(permisson) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(PERMISSION_LIST, 0);
+                    requestPermissions(listPermission, 0);
                     return;
                 }
             }
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.wait));
@@ -86,17 +82,6 @@ public class BaseActivity extends AppCompatActivity implements ChangedListener {
         ActionBar toolbar = getSupportActionBar();
         if (toolbar != null) {
             toolbar.setTitle(title);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (int result : grantResults) {
-            if (result == PackageManager.PERMISSION_DENIED) {
-                PermissionActivity.startIntent(this);
-                return;
-            }
         }
     }
 

@@ -1,6 +1,8 @@
 package com.khacchung.makevideo.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
@@ -10,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -40,12 +41,12 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
     private static final String TAG = HomeActivity.class.getName();
     private MyApplication myApplication;
 
-    private Handler handler = new Handler();
-
-    private boolean isPress = true;
-
     private Animation animThumbnail;
     private Animation animAppName;
+
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, HomeActivity.class);
@@ -60,27 +61,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         binding.setHandler(this);
 
-        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            File file = new File(MyPath.getPathFrame(this));
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            if (file.listFiles().length == 0) {
-                showLoading(getString(R.string.saving_first));
-                copyImage();
-            }
-        }
-
-        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            File file = new File(MyPath.getPathSound(this));
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            if (file.listFiles().length == 0) {
-                showLoading(getString(R.string.saving_second));
-                copySound();
-            }
-        }
+        realtimePermission(PERMISSION_LIST);
 
         animThumbnail = AnimationUtils.loadAnimation(this, R.anim.anim_thumbnail);
         animAppName = AnimationUtils.loadAnimation(this, R.anim.anim_app_name);
@@ -92,42 +73,70 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
         animThumbnail.start();
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            isPress = true;
-            handler.removeCallbacks(this);
+    private void writeFileOnFirstTimeOpenApp() {
+        Log.e(TAG,"writeFileOnFirstTimeOpenApp() start");
+        if (ContextCompat.checkSelfPermission(this, PERMISSION_LIST[1]) == PackageManager.PERMISSION_GRANTED) {
+            File file = new File(MyPath.getPathFrame(this));
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (file.listFiles().length == 0) {
+                showLoading(getString(R.string.saving_first));
+                copyImage();
+            }
         }
-    };
+
+        if (ContextCompat.checkSelfPermission(this, PERMISSION_LIST[1]) == PackageManager.PERMISSION_GRANTED) {
+            File file = new File(MyPath.getPathSound(this));
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (file.listFiles().length == 0) {
+                showLoading(getString(R.string.saving_second));
+                copySound();
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {
-        if (isPress) {
-            switch (view.getId()) {
-                case R.id.btnEditImage:
+        switch (view.getId()) {
+            case R.id.btnEditImage:
+                if (ContextCompat.checkSelfPermission(this, PERMISSION_LIST[0]) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, PERMISSION_LIST[1]) == PackageManager.PERMISSION_GRANTED) {
                     ListImageEditActivity.startIntent(this);
-                    break;
-                case R.id.btnCreateVideo:
+                } else {
+                    realtimePermission(PERMISSION_LIST);
+                }
+                break;
+            case R.id.btnCreateVideo:
+                if (ContextCompat.checkSelfPermission(this, PERMISSION_LIST[0]) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, PERMISSION_LIST[1]) == PackageManager.PERMISSION_GRANTED) {
                     SelectImageActivity.startIntent(this);
-                    break;
-                case R.id.btnCreatedFile:
+                } else {
+                    realtimePermission(PERMISSION_LIST);
+                }
+                break;
+            case R.id.btnCreatedFile:
+                if (ContextCompat.checkSelfPermission(this, PERMISSION_LIST[0]) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, PERMISSION_LIST[1]) == PackageManager.PERMISSION_GRANTED) {
                     CreatedFileActivity.startIntent(this);
-                    break;
-                case R.id.btnOut:
-                    onBackPressed();
-                    break;
-                case R.id.btnFeedBack:
-                    feedback();
-                    break;
-                case R.id.btnShare:
-                    shareApp();
-                    break;
-                case R.id.btnMore:
-                    seeMore();
-                    break;
-            }
-            isPress = false;
-            handler.postDelayed(runnable, 400);
+                } else {
+                    realtimePermission(PERMISSION_LIST);
+                }
+                break;
+            case R.id.btnOut:
+                onBackPressed();
+                break;
+            case R.id.btnFeedBack:
+                feedback();
+                break;
+            case R.id.btnShare:
+                shareApp();
+                break;
+            case R.id.btnMore:
+                seeMore();
+                break;
         }
     }
 
@@ -146,9 +155,11 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
     @Override
     public void onClickWithData(View view, Object value) {
 
+
     }
 
     private void copyImage() {
+        Log.e(TAG,"copyImage() start");
         AssetManager assetManager = getAssets();
         String[] files;
         try {
@@ -185,6 +196,7 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
     }
 
     private void copySound() {
+        Log.e(TAG,"copySound() start");
         AssetManager assetManager = getAssets();
         String[] files;
         try {
@@ -297,5 +309,16 @@ public class HomeActivity extends BaseActivity implements MyClickHandler {
 
         Window window = dialog.getWindow();
         window.setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int result : grantResults) {
+            if (result == PackageManager.PERMISSION_DENIED) {
+                return;
+            }
+        }
+        writeFileOnFirstTimeOpenApp();
     }
 }

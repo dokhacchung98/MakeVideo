@@ -2,6 +2,7 @@ package com.khacchung.makevideo.activity;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -29,9 +30,14 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
         activity.startActivity(intent);
     }
 
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realtimePermission(PERMISSION_LIST);
         makeFullScreen();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_show_image_full_screen);
         binding.setHandler(this);
@@ -106,5 +112,11 @@ public class ShowImageFullScreenActivity extends BaseActivity implements MyClick
     @Override
     public void onAnimationRepeat(Animator animation) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        CreatedFileActivity.startIntent(this);
     }
 }

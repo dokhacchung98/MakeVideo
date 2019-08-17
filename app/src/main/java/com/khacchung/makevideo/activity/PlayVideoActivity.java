@@ -2,6 +2,7 @@ package com.khacchung.makevideo.activity;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +25,10 @@ public class PlayVideoActivity extends BaseActivity {
     private static final String PATH_VIDEO = "path_video";
     private UniversalVideoView mVideoView;
     private UniversalMediaController mMediaController;
+
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     public static void startIntent(Activity activity, String pathVideo) {
         Intent intent = new Intent(activity, PlayVideoActivity.class);
@@ -52,6 +57,7 @@ public class PlayVideoActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         enableBackButton();
         setTitleToolbar(getString(R.string.watching));
+        realtimePermission(PERMISSION_LIST);
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_video);
 

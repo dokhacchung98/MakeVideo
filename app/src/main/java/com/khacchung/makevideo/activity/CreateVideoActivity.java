@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -85,7 +86,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
 
     private boolean isPlaying = true;
     private boolean isPauseVideo = true;
-    private boolean isLoading = true;
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreateVideoActivity.class);
@@ -360,7 +360,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     @Override
     public void onStartCreateVideo() {
         Log.e(TAG, "onStartCreateVideo()");
-        sizeMaxFrame = (listImage.size() - 2) * 30;
+        sizeMaxFrame = (listImage.size() - 2) * (30/**so frame chuyen giua 2 hinh anh*/ + 15/**khoang thoi gian delay 1 hinh anh*/);
         isStart = false;
         runOnUiThread(() -> initVideo());
     }
@@ -437,6 +437,7 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
         binding.frPlay.setVisibility(View.GONE);
         isPlaying = true;
         playMusic();
+        handler.removeCallbacks(runnable);
         handler.post(runnable);
     }
 
@@ -709,7 +710,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     }
 
     private void showLoading() {
-        isLoading = true;
         runOnUiThread(() -> {
             binding.frLoading.setVisibility(View.VISIBLE);
             binding.frPlay.setVisibility(View.GONE);
@@ -717,7 +717,6 @@ public class CreateVideoActivity extends BaseActivity implements CreatedListener
     }
 
     private void closeLoading() {
-        isLoading = false;
         runOnUiThread(() -> binding.frLoading.setVisibility(View.GONE));
     }
 }

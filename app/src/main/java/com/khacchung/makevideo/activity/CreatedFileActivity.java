@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,10 @@ public class CreatedFileActivity extends BaseActivity {
     private ArrayList<String> listImages = new ArrayList<>();
     private ArrayList<MyVideoModel> listVideos = new ArrayList<>();
     private String pathVideo = null;
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, CreatedFileActivity.class);
@@ -48,6 +53,7 @@ public class CreatedFileActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_created_file);
+        realtimePermission(PERMISSION_LIST);
 
         Intent intent = getIntent();
         String pathVideo = intent.getStringExtra(PATH_VIDEO);

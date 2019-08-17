@@ -54,9 +54,6 @@
             android:name=".activity.ListImageEditActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PermissionActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.EditImageActivity"
             android:screenOrientation="portrait" />
 

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,10 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
     private ArrayList<MyImageModel> listImage;
     private ImageMoveAdapter adapter;
 
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, MoveIndexActivity.class);
         activity.startActivity(intent);
@@ -45,6 +50,8 @@ public class MoveIndexActivity extends BaseActivity implements MySelectedItemLis
         enableBackButton();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_move_index);
         binding.setHandler(this);
+
+        realtimePermission(PERMISSION_LIST);
 
         myApplication = MyApplication.getInstance();
         listImage = myApplication.getListIamge();

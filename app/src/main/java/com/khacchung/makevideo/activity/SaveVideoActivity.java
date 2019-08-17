@@ -1,5 +1,6 @@
 package com.khacchung.makevideo.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,11 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
     private String nameVideo;
     private AlertDialog.Builder builder;
 
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, SaveVideoActivity.class);
         activity.startActivity(intent);
@@ -61,6 +67,7 @@ public class SaveVideoActivity extends BaseActivity implements MyClickHandler {
         super.onCreate(savedInstanceState);
         makeFullScreen();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_save_video);
+        realtimePermission(PERMISSION_LIST);
         binding.setHandler(this);
         myApplication = MyApplication.getInstance();
 

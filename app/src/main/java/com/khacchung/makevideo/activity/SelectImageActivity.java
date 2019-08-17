@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -45,6 +46,11 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
 
     private MyApplication myApplication;
 
+    public static final String[] PERMISSION_LIST = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     public static void startIntent(Activity activity) {
         Intent intent = new Intent(activity, SelectImageActivity.class);
         activity.startActivity(intent);
@@ -56,6 +62,7 @@ public class SelectImageActivity extends BaseActivity implements MySelectedItemL
         enableBackButton();
         setTitleToolbar(getString(R.string.list_image2));
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_image);
+        realtimePermission(PERMISSION_LIST);
 
         myApplication = MyApplication.getInstance();
 
